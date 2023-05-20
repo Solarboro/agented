@@ -8,7 +8,7 @@ function App() {
   return (
     
     <>
-      <HashRouter basename='agented'>
+      <HashRouter >
       <Link to='/'>Home</Link>
       <Link to='about'>About</Link>
       
