@@ -2,13 +2,13 @@ import logo from './logo.svg';
 import './App.css';
 import { Home } from './pages/home';
 import { About } from './pages/about';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Link, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
     
     <>
-      <BrowserRouter basename='agented'>
+      <HashRouter basename='agented'>
       <Link to='/'>Home</Link>
       <Link to='about'>About</Link>
       
@@ -17,7 +17,7 @@ function App() {
         <Route index element={<Home/>} />
         <Route path='about' element={<About/>} />
       </Routes>
-      </BrowserRouter>
+      </HashRouter>
       
     
 

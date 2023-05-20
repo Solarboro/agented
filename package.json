@@ -14,7 +14,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "deploy": "gh-pages -d build",
+    "deploy": "react-scripts build && gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
+    "dotenv-cli": "^7.2.1",
     "gh-pages": "^5.0.0"
   }
 }
