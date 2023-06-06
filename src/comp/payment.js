@@ -48,7 +48,7 @@ export default function usePaymentPanel({title}){
         form.setFieldsValue(raw);
         modal.confirm({
             icon: true,
-            okText: '提交',
+            okText: '更新',
             onOk: closeForm => {form.validateFields().then(values=>onSubmit({...raw, ...values, date: dayjs(values.date).unix()*1000}, closeForm)).catch(console.info)},
             content
         });

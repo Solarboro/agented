@@ -133,7 +133,7 @@ import useAPIKey from '../../../hooks/useAPIKey';
         <Divider orientation='left'>概要</Divider>
             
         <Segmented
-            default={productStore.filter}
+            value={productStore.filter}
             onChange={productStore.updateFilter}
             block
             options={getkanB()}

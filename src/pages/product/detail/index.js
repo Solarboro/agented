@@ -1,36 +1,53 @@
-import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Space, Table, Tabs } from "antd";
+import { CheckCircleOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Descriptions, Divider, FloatButton, Image, Popconfirm, Select, Space, Table, Tabs, Typography } from "antd";
 import { observer } from "mobx-react-lite";
 import { productStore } from "../../../store/productStore";
 import dayjs from 'dayjs';
 import usePaymentPanel from '../../../comp/payment';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import useCustOrderPanel from '../../../comp/custOrder';
+import useMaterialPanel from '../../../comp/material';
 
 
 
 function ProductDetail () {
 
     const nav = useNavigate();
-
-    const {id} = productStore.product;
+    const {product, updateProduct, updateStudio} = productStore;
     useEffect(
         ()=>{
-
-            if(!id)
+            if(!product.id)
                 nav("/product")
-        },[id]
+        },[product]
     );
 
+    
+    const [tabIndex, setTabIndex] = useState(1);
 
-  
+
+
+    // update product basic
+    const updateStyle = (style) => {
+
+        updateProduct({id: product.id, style})
+    }
+    const updatemodel = (model) => {
+
+        updateProduct({id: product.id, model})
+    }
+    const updateImage = (image) => {
+
+        updateProduct({id: product.id, image})
+    }
 
 
     // payment 
-    const paymentPanel = usePaymentPanel({title:'记录编辑'});
+    const paymentPanel = usePaymentPanel({title:'付款记录'});
     const {newPayment, updatePayment, deletePayment} = productStore;
     const submit2NewPayment = () => {
-        newPayment(productStore.product.id, {})
+        console.log('new payment item')
+        newPayment(product.id, {})
     }
     const submitPayment = (values, callbk) => {
         updatePayment(productStore.product.id, values, callbk)
@@ -96,6 +113,15 @@ function ProductDetail () {
 
 
     // Cust Order
+    const custPanel = useCustOrderPanel({title:'规格 & 数量'});
+    const {newCustOrder, updateCustOrder, deleteCustOrder} = productStore;
+    const subCustOrder = () => {
+        console.log('new payment item')
+        newCustOrder(product.id, {})
+    }
+    const putCutOrder = (values, callbk) => {
+        updateCustOrder(productStore.product.id, values, callbk)
+    }
     const custColumns = [
         {
             title: '码',
@@ -136,35 +162,94 @@ function ProductDetail () {
                         placement="topRight"
                         title="产品移除"
                         // description={`${item.style}-${item.model}`}
-                        onConfirm={()=>deletePayment(productStore.product.id, record.id)}
+                        onConfirm={()=>deleteCustOrder(productStore.product.id, record.id)}
                         okText="Yes"
                         cancelText="No"
                     >
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>
                      
-                    <a onClick={()=>paymentPanel({...record, date: dayjs(record.date)}, submitPayment)}>编辑</a>
+                    <a onClick={()=>custPanel({...record, date: dayjs(record.date)}, putCutOrder)}>编辑</a>
                 </Space>
             )
         },
     ]
+
+
+
+    // Cust Order
+    const materialPanel = useMaterialPanel({title:'物料 & 工厂'});
+    const {newMaterials, updateMaterials, deleteMaterials} = productStore;
+    const subMaterial = () => {
+        console.log('new payment item')
+        newMaterials(product.id, {})
+    }
+    const putMaterial = (values, callbk) => {
+        updateMaterials(productStore.product.id, values, callbk)
+    }
+    
+    const materialColumns = [
+        {
+            title: '物料名',
+            dataIndex: 'label',
+            key: 'label',
+        },{
+            title: '规格',
+            dataIndex: 'specification',
+            key: 'specification',
+        },{
+            title: '单价',
+            dataIndex: 'price',
+            key: 'price',
+        },{
+            title: '数量',
+            dataIndex: 'count',
+            key: 'count',
+        },{
+            title: '总价',
+            dataIndex: 'amount',
+            key: 'amount',
+        },{
+            title: '操作',
+            key: 'action',
+            render: (_, record) => (
+                <Space>
+                    <Popconfirm
+                        placement="topRight"
+                        title="产品移除"
+                        // description={`${item.style}-${item.model}`}
+                        onConfirm={()=>deleteMaterials(productStore.product.id, record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <DeleteOutlined  style={{color: 'red'}}/>
+                    </Popconfirm>
+                     
+                    <a onClick={()=>materialPanel({...record, date: dayjs(record.date)}, putMaterial)}>编辑</a>
+                </Space>
+            )
+        },
+    ]
+
+
     
   const items = [
     {
-      key: '1',
+      key: 1,
       label: `规格 & 数量`,
-      children: <> 
-            <Button onClick={submit2NewPayment}>new Payment</Button>
+      children:
             <Table pagination={{position:[]}}  showHeader={true} columns={custColumns} dataSource={productStore.product?.custOrders?.map(value=> ({key: `custOrders${value.id}`, ...value }) )} 
             
                 summary={
                     (pageData) => {
 
                         let totalPreCount = 0;
+                        let totalActCount = 0
 
                         pageData.forEach(
                             ({preCount, actCount}) => {
                                 totalPreCount += preCount;
+                                totalActCount+=actCount;
                             }
                         );
 
@@ -175,42 +260,131 @@ function ProductDetail () {
                                 <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
                                 <Table.Summary.Cell index={3}>-</Table.Summary.Cell>
                                 <Table.Summary.Cell index={4}>{totalPreCount}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={5}>{totalPreCount}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={5}>{totalActCount}</Table.Summary.Cell>
                             </Table.Summary.Row>
                         )
                     }
                 }
             
             />
-        </>
     },
     {
-      key: '2',
+      key: 2,
       label: `物料 & 工厂`,
-      children: <> 
-            <Button onClick={submit2NewPayment}>new Payment</Button>
-            <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={productStore.product?.payments?.map(value=> ({key: `paymentKey_${value.id}`, ...value }) )} />
-        </>
+      children: 
+            <Table pagination={{position:[]}}  showHeader={true} columns={materialColumns} dataSource={productStore.product?.materials?.map(value=> ({key: `materials${value.id}`, ...value }) )} 
+                summary={
+                    (pageData) => {
+
+                        let total = 0
+                        pageData.forEach(
+                            ({amount}) => {
+                                total += amount;
+                            }
+                        );
+
+                        return (
+                            <Table.Summary.Row>
+                                <Table.Summary.Cell index={0}>{'总'}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
+                                <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
+                                <Table.Summary.Cell index={3}>-</Table.Summary.Cell>
+                                <Table.Summary.Cell index={4}>{total}</Table.Summary.Cell>
+                            </Table.Summary.Row>
+                        )
+                    }
+                }
+            
+            
+            />
     },
     {
-      key: '3',
+      key: 3,
       label: `付款记录`,
-      children:  <> 
-            <Button onClick={submit2NewPayment}>new Payment</Button>
-            <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={productStore.product?.payments?.map(value=> ({key: `paymentKey_${value.id}`, ...value }) )} />
-        </>
+      children:  
+            <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={productStore.product?.payments?.map(value=> ({key: `payments${value.id}`, ...value }) )} 
+            summary={
+                (pageData) => {
+
+                    let total = 0
+                    pageData.forEach(
+                        ({amount}) => {
+                            total += amount;
+                        }
+                    );
+
+                    return (
+                        <Table.Summary.Row>
+                            <Table.Summary.Cell index={0}>{'总'}</Table.Summary.Cell>
+                            <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
+                            <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
+                            <Table.Summary.Cell index={3}>{total}</Table.Summary.Cell>
+                        </Table.Summary.Row>
+                    )
+                }
+            }
+            />
     },
   ];
+
+
+
+    const newRecord = () => {
+
+
+        switch (tabIndex) {
+            case 1:
+                subCustOrder()
+                break;
+            case 2:
+                subMaterial()
+                break;
+            case 3:
+                submit2NewPayment()
+                break;
+        
+            default:
+                break;
+        }
+    }
 
     return (
         <>
 
-        
+            <Space direction="vertical"  style={{ display: 'flex' }}>
+                <Space align='top'>
+                <Image
+                    
+                    width={'200px'}
+                    height={'300px'}
+                    src="error"
+                    fallback="data:image/png;base64,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"
+                />
+
+
+                    {/* <Descriptions column={{xs:2, s:2}} layout='vertical'> */}
+                    <Descriptions >
+                        <Descriptions.Item label='编号' ><Typography.Text editable={{onChange: updatemodel}} >{product.model}</Typography.Text></Descriptions.Item>
+                        <Descriptions.Item label='款式' ><Typography.Text editable={{onChange: updateStyle}} >{product.style}</Typography.Text></Descriptions.Item>
+                        <Descriptions.Item label='日期'>{dayjs(product.cdate).format('YYYY.MM.DD')}</Descriptions.Item>
+                        <Descriptions.Item label='状态'>{product.productStatus}</Descriptions.Item>
+                        <Descriptions.Item label='板间'><Select onChange={updateStudio} style={{width: '100%'}} defaultValue={product.sampleOrder?.studioName} options={[{value: 1, label: 701},{value: 2, label: '外部'}]}/></Descriptions.Item>
+                        <Descriptions.Item label='板师'>{product.sampleOrder?.producerName ? <>{product.sampleOrder.producerName} - {product.sampleOrder.cost}</> : '-' }</Descriptions.Item>
+                        <Descriptions.Item  label='备注'>dsfasfasdfasdfsafsajflasfadskflsjflfjsaaldsjf </Descriptions.Item>
+                    </Descriptions>
+                </Space>
+
+                <Tabs defaultActiveKey={tabIndex} onChange={setTabIndex} items={items} /> 
+
+            </Space>
+
+            <FloatButton
+                shape="circle"
+                type="primary"
+                onClick={()=>newRecord()}
+                icon={<PlusCircleOutlined />}
+            />
             
-
-            <Tabs defaultActiveKey="1" items={items} />
-
-
         </>
     )
 

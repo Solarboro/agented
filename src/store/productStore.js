@@ -52,6 +52,16 @@ class ProductStore{
         .catch(console.log);
     }
 
+    updateProduct = (basic) =>{
+        http.put('product', basic)
+        .then(res=>{
+            console.log(res.data)
+            this.products = [ ...this.products.filter(value => value.id !== basic.id), res.data ]
+            this.product ={...res.data}
+        })
+        .catch(console.log);
+    }
+
     index = () => {
 
         http.get('product')
@@ -89,6 +99,15 @@ class ProductStore{
 
         
     }
+    // sample & studio
+    updateStudio = (id) => {
+
+        console.log(id)
+        http.put(`/product/${this.product.id}/studio`, {id})
+        .then(res=> this.product = {...this.product,  sampleOrder: res.data  })
+        .catch(console.log)
+    }
+
     // Payment 
     newPayment = (productId, requestBody) => {
         http.post(`product/${productId}/payment`, {...requestBody})
@@ -139,6 +158,108 @@ class ProductStore{
     }
 
     // payment
+
+    // CustOrder 
+    newCustOrder = (productId, requestBody) => {
+        http.post(`product/${productId}/custOrder`, {...requestBody})
+        .then(res=>{
+            
+            for (const iterator of this.products) {
+                if(iterator.id === productId)
+                    iterator.custOrders.push({...res.data})
+            }
+
+          
+        })
+        .catch(console.error);
+    }
+
+    updateCustOrder= (productId, requestBody, callbk) => {
+        http.put(`product/${productId}/custOrder`, {...requestBody})
+        .then(res=>{
+            
+            const payment = res.data;
+            for (const iterator of this.products) {
+                if(iterator.id === productId){
+                    let index = iterator.custOrders.findIndex(value => value.id === payment.id);
+                    iterator.custOrders.splice(index, 1, {...payment})
+
+                }
+
+            }
+            //
+            callbk();
+        })
+        .catch(console.error);
+    }
+
+    deleteCustOrder = (productId, paymentId) => {
+        http.delete(`product/${productId}/custOrder/${paymentId}`)
+        .then(res=>{
+
+            for (const iterator of this.products) {
+                if(iterator.id === productId){
+                    let index = iterator.custOrders.findIndex(value => value.id === paymentId);
+                    iterator.custOrders.splice(index, 1)
+                }
+            }
+           
+        })
+        .catch(console.error);
+    }
+
+    // CustOrder
+
+    // Materials 
+    newMaterials = (productId, requestBody) => {
+        http.post(`product/${productId}/material`, {...requestBody})
+        .then(res=>{
+            
+            for (const iterator of this.products) {
+                if(iterator.id === productId)
+                    iterator.materials.push({...res.data})
+            }
+
+          
+        })
+        .catch(console.error);
+    }
+
+    updateMaterials= (productId, requestBody, callbk) => {
+        http.put(`product/${productId}/material`, {...requestBody})
+        .then(res=>{
+            
+            const payment = res.data;
+            for (const iterator of this.products) {
+                if(iterator.id === productId){
+                    let index = iterator.materials.findIndex(value => value.id === payment.id);
+                    iterator.materials.splice(index, 1, {...payment})
+
+                }
+
+            }
+            //
+            callbk();
+        })
+        .catch(console.error);
+    }
+
+    deleteMaterials = (productId, paymentId) => {
+        http.delete(`product/${productId}/material/${paymentId}`)
+        .then(res=>{
+
+            for (const iterator of this.products) {
+                if(iterator.id === productId){
+                    let index = iterator.materials.findIndex(value => value.id === paymentId);
+                    iterator.materials.splice(index, 1)
+                }
+            }
+           
+        })
+        .catch(console.error);
+    }
+
+    // CustOrder
 
 
 }
