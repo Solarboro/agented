@@ -1,5 +1,6 @@
 import axios from "axios";
-
+import nProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 
 
@@ -12,6 +13,9 @@ const http = axios.create({
 http.interceptors.request.use(
     config => {
 
+        //
+        nProgress.start();
+
         console.info(config)
         // append access token
         if(localStorage.getItem('API_KEY') && config.url !== 'login')
@@ -21,6 +25,8 @@ http.interceptors.request.use(
         return config;
     },
     error => {
+        //
+        nProgress.done();
   
         return Promise.reject(error);
     }
@@ -29,9 +35,14 @@ http.interceptors.request.use(
 http.interceptors.response.use(
     response => {
    
+        //
+        nProgress.done();
+
         return response;
     },
     error => {
+        //
+        nProgress.done();
         console.info("start")
         console.info(error)
         console.info("end")

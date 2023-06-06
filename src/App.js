@@ -13,6 +13,8 @@ import {App} from 'antd';
 
 const Home = lazy(()=>import('./pages/home'));
 const About = lazy(()=>import('./pages/about'));
+const ProductDetail = lazy(()=>import('./pages/product/detail'));
+
 
 const getActive = ({isActive})=>{
   return isActive ? 'activeDemo': '';
@@ -38,7 +40,7 @@ function MyApp() {
     
     >
       <App>
-
+    
         <div>none header</div>
         <HashRouter >
           <NavLink className={getActive} to="/">Home</NavLink>
@@ -50,6 +52,7 @@ function MyApp() {
             <Routes>
               <Route index element={<Home />} />
               <Route path='about' element={<About />} />
+              <Route path='product/detail' element={<ProductDetail />} />
             </Routes>
           </Suspense>
         </HashRouter>

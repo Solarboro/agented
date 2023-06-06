@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { App, Form, Input } from "antd";
+import { App, Divider, Form, Input } from "antd";
 
 
 export default function useLogin(){
@@ -14,6 +14,8 @@ export default function useLogin(){
             initialValues={{username: 'solar', password: 'abcd1234'}}
         >
             
+
+        <Divider>用户登入 </Divider>
         <Form.Item
         //   label="用户名"
           name="username"
@@ -40,7 +42,7 @@ export default function useLogin(){
         modal.confirm({
             icon: true,
             // closeIcon: false,
-            title: '用户登录',
+            // title: '用户登录',
             okText: '登录',
             onOk: closeForm => {loginForm.validateFields().then(values=>onLogin(values, closeForm)).catch(console.info)},
             content
