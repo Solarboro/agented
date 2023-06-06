@@ -1,30 +1,20 @@
-import { ArrowDownOutlined, DeleteOutlined } from '@ant-design/icons';
-import { App, Avatar, Button, Divider, Form, Input, List, Row, Col,Card, Statistic, Segmented, Typography, Space, Image, Tag, Progress, Popconfirm, Select } from "antd"
-import useAPIKey from "../../hooks/useAPIKey"
-import { red, green } from '@ant-design/colors';
-import useLogin from '../../comp/login';
-import { userStore } from '../../store/userStore';
+import {  DeleteOutlined, RedoOutlined } from '@ant-design/icons';
+import { App,  Button, Divider,   List,  Card, Statistic, Segmented, Typography,  Image, Tag,  Popconfirm, Select } from "antd"
 import { observer } from 'mobx-react-lite';
-import { productStore } from '../../store/productStore';
 import './index.css';
 import dayjs from 'dayjs';
-import EditableC from '../../comp/editable';
-import usePaymentPanel from '../../comp/payment';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-
-const { Title } = Typography;
-
-const udata = [
-    {username: 'usdfsfsdf1'},{},{username: 'u3'},
-    // {username: 'u1'},{username: 'u2'},{username: 'u3'},
-    // {username: 'u1'},{username: 'u2'},{username: 'u3'},
-    // {username: 'u1'},{username: 'u2'},{username: 'u3'}
-
-];
+import usePaymentPanel from '../../../comp/payment';
+import { userStore } from '../../../store/userStore';
+import { productStore } from '../../../store/productStore';
+import useLogin from '../../../comp/login';
+import useAPIKey from '../../../hooks/useAPIKey';
 
 
- function About() {
+
+
+ function ProductSummary() {
 
 
     useEffect(
@@ -49,15 +39,6 @@ const udata = [
         userStore.login(values, accessToken =>{ setValue(accessToken); callbk();}, message)
     }
 
-
-    // tips
-
-    const goToDetail = (item) => {
-        console.info(item.payments)
-        productStore.selectd(item);
-        nav('/product/detail');
-    }
-
     // action buton
     const actionList = (item) => {
 
@@ -72,6 +53,16 @@ const udata = [
                     >
                         <DeleteOutlined  style={{color: 'red'}}/> 移除
                     </Popconfirm>
+        const fallb = <Popconfirm
+                        placement="topRight"
+                        title="回滚状态"
+                        description={`${item.style}-${item.model}`}
+                        onConfirm={()=>productStore.fallbackStatus(item.id)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <RedoOutlined  style={{color: 'red'}}/> 回滚
+                    </Popconfirm>
 
         const sampleCost = <Tag color='success'>{item.sampleOrder.studioName} {item.sampleOrder.producerName ? item.sampleOrder.producerName + ' ' + item.sampleOrder.cost + ' 小时' : "排队中"}</Tag>
 
@@ -83,6 +74,7 @@ const udata = [
                 break;
             case 'studio':
                 list.push(sampleCost);
+                list.push(fallb)
                 break;
         
             case 'factory':
@@ -92,6 +84,7 @@ const udata = [
                 }
                 const cost = <Tag color='error'>{factoryCost} 元</Tag>
                 list.push(cost);
+                list.push(fallb);
                 break
             default:
                 break;
@@ -137,24 +130,6 @@ const udata = [
   
         <div className='about'>
 
-        <Select 
-            defaultValue="jack"
-
-            options={[
-                {value: 'jack', label: "Jack"},
-                {value: 'solar', label: "Solar"},
-                {value: 'boro', label: "Boro"},
-            ]}
-        />
-
-        {userStore.user.fullname}   
-
-    
-        <Button onClick={()=>login(loginTo)}>called</Button>
-        <Button onClick={()=> productStore.index() }>products</Button>
-        <Button onClick={()=> paymentPanel((values,callbk)=> console.log(values)) }>payment</Button>
-
-
         <Divider orientation='left'>概要</Divider>
             
         <Segmented
@@ -186,7 +161,7 @@ const udata = [
                 >
            
                     <List.Item.Meta  
-                        onClick={()=>nav(`/product/${value.id}`)}
+                        onClick={()=>{productStore.product=value; nav(`/product/detail`)}}
                         avatar={<Image
                                     width={30}
                                     height={40}
@@ -214,4 +189,4 @@ const udata = [
 
 
 
-export default observer(About)
+export default observer(ProductSummary)

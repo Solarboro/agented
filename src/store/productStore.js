@@ -22,6 +22,14 @@ class ProductStore{
         this.product = {...object}
     }
 
+    fallbackStatus = (productId)=>{
+        http.get(`product/${productId}/fallbackStatus`)
+        .then(res=>{
+            this.products = [...this.products.filter(item=> item.id !== productId), res.data]
+        })
+        .catch(console.log);
+    }
+
 
     updateFilter = value => this.filter = value
 
@@ -61,7 +69,7 @@ class ProductStore{
     del = (id) => {
         http.delete(`product/${id}`).then(
             res => this.products.splice(this.products.findIndex(value=>value.id === id),1)
-        )
+        ).catch(console.log)
     }
 
     getByFilter = () => {

@@ -1,7 +1,9 @@
 import axios from "axios";
+import { message } from "antd";
 import nProgress from "nprogress";
 import "nprogress/nprogress.css";
-
+import { useNavigate } from "react-router-dom";
+nProgress.configure({showSpinner: false});
 
 
 const http = axios.create({
@@ -16,7 +18,6 @@ http.interceptors.request.use(
         //
         nProgress.start();
 
-        console.info(config)
         // append access token
         if(localStorage.getItem('API_KEY') && config.url !== 'login')
             config.headers.Authorization = `Bearer ${localStorage.getItem('API_KEY')}`
@@ -43,9 +44,21 @@ http.interceptors.response.use(
     error => {
         //
         nProgress.done();
-        console.info("start")
-        console.info(error)
-        console.info("end")
+
+   
+          
+        if(error?.response?.status !== 200){
+
+            switch (error?.response?.status) {
+                case 403:
+                    message.warning("请重新登录 !")
+                    break;
+            
+                default:
+                    message.error(error?.response?.data?.message)
+                    break;
+            }
+        }
      
         return Promise.reject(error);
     }

@@ -4,23 +4,36 @@ import { observer } from "mobx-react-lite";
 import { productStore } from "../../../store/productStore";
 import dayjs from 'dayjs';
 import usePaymentPanel from '../../../comp/payment';
-
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 
 function ProductDetail () {
 
-    const {id: productId, payments, sampleOrder, custOrders, materials} = productStore.product;
+    const nav = useNavigate();
+
+    const {id} = productStore.product;
+    useEffect(
+        ()=>{
+
+            if(!id)
+                nav("/product")
+        },[id]
+    );
+
+
+  
+
 
     // payment 
     const paymentPanel = usePaymentPanel({title:'记录编辑'});
     const {newPayment, updatePayment, deletePayment} = productStore;
     const submit2NewPayment = () => {
-        newPayment(productId, {})
+        newPayment(productStore.product.id, {})
     }
     const submitPayment = (values, callbk) => {
-        updatePayment(productId, values, callbk)
+        updatePayment(productStore.product.id, values, callbk)
     }
     const paymentColumns = [
         {
@@ -68,7 +81,7 @@ function ProductDetail () {
                         placement="topRight"
                         title="产品移除"
                         // description={`${item.style}-${item.model}`}
-                        onConfirm={()=>deletePayment(productId, record.id)}
+                        onConfirm={()=>deletePayment(productStore.product.id, record.id)}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -123,7 +136,7 @@ function ProductDetail () {
                         placement="topRight"
                         title="产品移除"
                         // description={`${item.style}-${item.model}`}
-                        onConfirm={()=>deletePayment(productId, record.id)}
+                        onConfirm={()=>deletePayment(productStore.product.id, record.id)}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -135,18 +148,14 @@ function ProductDetail () {
             )
         },
     ]
-    //
-
-const onChange = (key) => {
-    console.log(key);
-  };
+    
   const items = [
     {
       key: '1',
       label: `规格 & 数量`,
       children: <> 
             <Button onClick={submit2NewPayment}>new Payment</Button>
-            <Table pagination={{position:[]}}  showHeader={true} columns={custColumns} dataSource={custOrders.map(value=> ({key: `custOrders${value.id}`, ...value }) )} 
+            <Table pagination={{position:[]}}  showHeader={true} columns={custColumns} dataSource={productStore.product?.custOrders?.map(value=> ({key: `custOrders${value.id}`, ...value }) )} 
             
                 summary={
                     (pageData) => {
@@ -180,7 +189,7 @@ const onChange = (key) => {
       label: `物料 & 工厂`,
       children: <> 
             <Button onClick={submit2NewPayment}>new Payment</Button>
-            <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={payments.map(value=> ({key: `paymentKey_${value.id}`, ...value }) )} />
+            <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={productStore.product?.payments?.map(value=> ({key: `paymentKey_${value.id}`, ...value }) )} />
         </>
     },
     {
@@ -188,16 +197,18 @@ const onChange = (key) => {
       label: `付款记录`,
       children:  <> 
             <Button onClick={submit2NewPayment}>new Payment</Button>
-            <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={payments.map(value=> ({key: `paymentKey_${value.id}`, ...value }) )} />
+            <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={productStore.product?.payments?.map(value=> ({key: `paymentKey_${value.id}`, ...value }) )} />
         </>
     },
   ];
 
     return (
         <>
+
+        
             
 
-            <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+            <Tabs defaultActiveKey="1" items={items} />
 
 
         </>

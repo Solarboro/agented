@@ -41,3 +41,8 @@
 .activeDemo{
   color: red !important;
 }
+
+.myappc{
+  max-width: 480px;
+  margin: auto;
+}

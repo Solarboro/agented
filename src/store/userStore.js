@@ -26,6 +26,17 @@ class UserStore {
     }
 
 
+    get isLogin (){
+        return this.user?.id ? true : false;
+    }
+
+    get isAgent(){
+        return this.user?.authoritiesList.filter(v=> v.role === 'AGENT').length > 0 ? true : false;
+    }
+
+    get isStudio(){
+        return this.user?.authoritiesList.filter(v=> v.role === 'STUDIO').length > 0 ? true : false;
+    }
 }
 
 export const userStore = new UserStore()

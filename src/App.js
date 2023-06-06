@@ -10,9 +10,11 @@ import { ConfigProvider } from 'antd';
 // dayjs.locale('en');
 // dayjs.locale('zh-cn');
 import {App} from 'antd';
+import AgentRoute from './comp/agent';
 
 const Home = lazy(()=>import('./pages/home'));
 const About = lazy(()=>import('./pages/about'));
+const ProductSummary = lazy(()=>import('./pages/product/summary'));
 const ProductDetail = lazy(()=>import('./pages/product/detail'));
 
 
@@ -23,7 +25,7 @@ function MyApp() {
 
   const [locale, setLocal] = useState(zhCN);
   return (
-    <>
+    <div className='myappc'>
     <ConfigProvider 
         locale={locale} 
         componentSize='small'
@@ -41,27 +43,27 @@ function MyApp() {
     >
       <App>
     
-        <div>none header</div>
         <HashRouter >
           <NavLink className={getActive} to="/">Home</NavLink>
           <NavLink className={getActive} to='about'>About</NavLink>
+          <NavLink className={getActive} to='product'>Product</NavLink>
           {/* <Link to='/'>Home</Link>
           <Link to='about'>About</Link> */}
           
           <Suspense>
             <Routes>
               <Route index element={<Home />} />
-              <Route path='about' element={<About />} />
-              <Route path='product/detail' element={<ProductDetail />} />
+              <Route path='about' element={<AgentRoute> <About /></AgentRoute>} />
+              <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
+              <Route path='product/detail' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
             </Routes>
           </Suspense>
         </HashRouter>
 
 
-        <div>none foot</div>
       </App>
     </ConfigProvider>
-    </>
+    </div>
   )
 }
 

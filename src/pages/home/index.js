@@ -2,11 +2,22 @@ import { LoadingOutlined, ScissorOutlined, FormOutlined, SmileOutlined, Solution
 import { App, Button, Col, DatePicker, Divider, Drawer,  Image,  Row,  Space, Steps, Table, Tag } from "antd";
 import { useState } from "react";
 import useAPIKey from "../../hooks/useAPIKey";
+import { userStore } from '../../store/userStore';
+import useLogin from '../../comp/login';
 
 
 
 
  export default function Home (){
+
+    // login panael
+    const login = useLogin();
+    const [value, setValue] = useAPIKey();
+    const loginTo = (values, callbk) => {
+
+      userStore.login(values, accessToken =>{ setValue(accessToken); callbk();}, message)
+  }
+
 
     // API Hooke
     const [api, setAPI] = useAPIKey();
@@ -94,6 +105,9 @@ import useAPIKey from "../../hooks/useAPIKey";
       ];
     return (
         <>
+
+                <Button onClick={()=>login(loginTo)}>called</Button>
+                {userStore.isAgent ? 'yes' : 'no'}
                 <Row 
                     // justify='space-between' 
                     align='middle'>
