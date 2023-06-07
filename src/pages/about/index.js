@@ -67,8 +67,7 @@ const udata = [
                         title="产品移除"
                         description={`${item.style}-${item.model}`}
                         onConfirm={()=>productStore.del(item.id)}
-                        okText="Yes"
-                        cancelText="No"
+            
                     >
                         <DeleteOutlined  style={{color: 'red'}}/> 移除
                     </Popconfirm>

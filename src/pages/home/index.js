@@ -48,7 +48,7 @@ function HomeEntity () {
 
         
 
-            <Button type='primary' size='middle' onClick={toHome} >开 始 !</Button>
+            <Button type='primary' size='middle' onClick={toHome} style={{width: '50%'}}>开 始 !</Button>
         </div>
     )
 }

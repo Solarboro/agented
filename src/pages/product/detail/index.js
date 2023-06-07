@@ -117,8 +117,7 @@ function ProductDetail () {
                         title="产品移除"
                         // description={`${item.style}-${item.model}`}
                         onConfirm={()=>deletePayment(productStore.product.id, record.id)}
-                        okText="Yes"
-                        cancelText="No"
+                 
                     >
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>
@@ -182,8 +181,7 @@ function ProductDetail () {
                         title="产品移除"
                         // description={`${item.style}-${item.model}`}
                         onConfirm={()=>deleteCustOrder(productStore.product.id, record.id)}
-                        okText="Yes"
-                        cancelText="No"
+                 
                     >
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>
@@ -238,8 +236,7 @@ function ProductDetail () {
                         title="产品移除"
                         // description={`${item.style}-${item.model}`}
                         onConfirm={()=>deleteMaterials(productStore.product.id, record.id)}
-                        okText="Yes"
-                        cancelText="No"
+                    
                     >
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>

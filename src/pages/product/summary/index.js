@@ -55,8 +55,7 @@ import useAPIKey from '../../../hooks/useAPIKey';
                         title="产品移除"
                         description={`${item.style}-${item.model}`}
                         onConfirm={()=>productStore.del(item.id)}
-                        okText="Yes"
-                        cancelText="No"
+                  
                     >
                         <DeleteOutlined  style={{color: 'red'}}/> 移除
                     </Popconfirm>
@@ -65,8 +64,7 @@ import useAPIKey from '../../../hooks/useAPIKey';
                         title="回滚状态"
                         description={`${item.style}-${item.model}`}
                         onConfirm={()=>productStore.fallbackStatus(item.id)}
-                        okText="Yes"
-                        cancelText="No"
+                      
                     >
                         <RedoOutlined  style={{color: 'red'}}/> 回滚
                     </Popconfirm>
