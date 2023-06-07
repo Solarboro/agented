@@ -56,8 +56,7 @@ class ProductStore{
         http.put('product', basic)
         .then(res=>{
             console.log(res.data)
-            this.products = [ ...this.products.filter(value => value.id !== basic.id), res.data ]
-            this.product ={...res.data}
+            this.product ={...res.data, custOrders: [...res.data.custOrders]}
         })
         .catch(console.log);
     }
@@ -113,11 +112,12 @@ class ProductStore{
         http.post(`product/${productId}/payment`, {...requestBody})
         .then(res=>{
             
-            for (const iterator of this.products) {
-                if(iterator.id === productId)
-                    iterator.payments.push({...res.data})
-            }
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId)
+            //         iterator.payments.push({...res.data})
+            // }
 
+            this.product.payments.push({...res.data})
           
         })
         .catch(console.error);
@@ -128,14 +128,17 @@ class ProductStore{
         .then(res=>{
             
             const payment = res.data;
-            for (const iterator of this.products) {
-                if(iterator.id === productId){
-                    let index = iterator.payments.findIndex(value => value.id === payment.id);
-                    iterator.payments.splice(index, 1, {...payment})
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId){
+            //         let index = iterator.payments.findIndex(value => value.id === payment.id);
+            //         iterator.payments.splice(index, 1, {...payment})
 
-                }
+            //     }
 
-            }
+            // }
+            let index = this.product.payments.findIndex(value => value.id === payment.id);
+            this.product.payments.splice(index, 1, {...payment})
+
             //
             callbk();
         })
@@ -146,13 +149,14 @@ class ProductStore{
         http.delete(`product/${productId}/payment/${paymentId}`)
         .then(res=>{
 
-            for (const iterator of this.products) {
-                if(iterator.id === productId){
-                    let index = iterator.payments.findIndex(value => value.id === paymentId);
-                    iterator.payments.splice(index, 1)
-                }
-            }
-           
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId){
+            //         let index = iterator.payments.findIndex(value => value.id === paymentId);
+            //         iterator.payments.splice(index, 1)
+            //     }
+            // }
+            let index = this.product.payments.findIndex(value => value.id === paymentId);
+            this.product.payments.splice(index, 1)
         })
         .catch(console.error);
     }
@@ -164,10 +168,11 @@ class ProductStore{
         http.post(`product/${productId}/custOrder`, {...requestBody})
         .then(res=>{
             
-            for (const iterator of this.products) {
-                if(iterator.id === productId)
-                    iterator.custOrders.push({...res.data})
-            }
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId)
+            //         iterator.custOrders.push({...res.data})
+            // }
+            this.product.custOrders.push({...res.data})
 
           
         })
@@ -179,14 +184,16 @@ class ProductStore{
         .then(res=>{
             
             const payment = res.data;
-            for (const iterator of this.products) {
-                if(iterator.id === productId){
-                    let index = iterator.custOrders.findIndex(value => value.id === payment.id);
-                    iterator.custOrders.splice(index, 1, {...payment})
-
-                }
-
-            }
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId){
+            //         let index = iterator.custOrders.findIndex(value => value.id === payment.id);
+            //         iterator.custOrders.splice(index, 1, {...payment})
+                    
+            //     }
+                
+            // }
+            let index = this.product.custOrders.findIndex(value => value.id === payment.id);
+            this.product.custOrders.splice(index, 1, {...payment})
             //
             callbk();
         })
@@ -197,12 +204,14 @@ class ProductStore{
         http.delete(`product/${productId}/custOrder/${paymentId}`)
         .then(res=>{
 
-            for (const iterator of this.products) {
-                if(iterator.id === productId){
-                    let index = iterator.custOrders.findIndex(value => value.id === paymentId);
-                    iterator.custOrders.splice(index, 1)
-                }
-            }
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId){
+            //         let index = iterator.custOrders.findIndex(value => value.id === paymentId);
+            //         iterator.custOrders.splice(index, 1)
+            //     }
+            // }
+            let index = this.product.custOrders.findIndex(value => value.id === paymentId);
+            this.product.custOrders.splice(index, 1)
            
         })
         .catch(console.error);
@@ -215,13 +224,15 @@ class ProductStore{
         http.post(`product/${productId}/material`, {...requestBody})
         .then(res=>{
             
-            for (const iterator of this.products) {
-                if(iterator.id === productId)
-                    iterator.materials.push({...res.data})
-            }
-
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId)
+            //         iterator.materials.push({...res.data})
+            // }
+                
+            this.product.materials.push({...res.data})
           
-        })
+            }
+        )
         .catch(console.error);
     }
 
@@ -230,14 +241,14 @@ class ProductStore{
         .then(res=>{
             
             const payment = res.data;
-            for (const iterator of this.products) {
-                if(iterator.id === productId){
-                    let index = iterator.materials.findIndex(value => value.id === payment.id);
-                    iterator.materials.splice(index, 1, {...payment})
-
-                }
-
-            }
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId){
+            //         let index = iterator.materials.findIndex(value => value.id === payment.id);
+            //         iterator.materials.splice(index, 1, {...payment})
+            //     }
+            // }
+            let index = this.product.materials.findIndex(value => value.id === payment.id);
+            this.product.materials.splice(index, 1, {...payment})
             //
             callbk();
         })
@@ -248,13 +259,15 @@ class ProductStore{
         http.delete(`product/${productId}/material/${paymentId}`)
         .then(res=>{
 
-            for (const iterator of this.products) {
-                if(iterator.id === productId){
-                    let index = iterator.materials.findIndex(value => value.id === paymentId);
-                    iterator.materials.splice(index, 1)
-                }
-            }
-           
+            // for (const iterator of this.products) {
+            //     if(iterator.id === productId){
+            //         let index = iterator.materials.findIndex(value => value.id === paymentId);
+            //         iterator.materials.splice(index, 1)
+            //     }
+            // }
+            let index = this.product.materials.findIndex(value => value.id === paymentId);
+            this.product.materials.splice(index, 1)
+            
         })
         .catch(console.error);
     }

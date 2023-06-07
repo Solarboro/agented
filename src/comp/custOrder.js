@@ -16,10 +16,11 @@ export default function useCustOrderPanel({title}){
         >
 
           {title && <Divider>{title}</Divider>}
-          <Space>
+          
             <Form.Item name="size" label="尺码"  >
               <Input />
             </Form.Item>
+            <Space>
             <Form.Item name="preCount" label="预定件数"  >
               <InputNumber />
             </Form.Item>
@@ -28,7 +29,7 @@ export default function useCustOrderPanel({title}){
             </Form.Item>
           </Space>
 
-          <Space>
+          <Space.Compact>
             <Form.Item name="s1" label="胸围"  >
               <InputNumber />
             </Form.Item>
@@ -38,7 +39,7 @@ export default function useCustOrderPanel({title}){
             <Form.Item name="s3" label="衣长"  >
               <InputNumber />
             </Form.Item>
-          </Space>
+          </Space.Compact>
 
     
         </Form>
