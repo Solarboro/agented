@@ -4,7 +4,7 @@ import { userStore } from "../store/userStore"
 
 
 const AgentRoute =  ({children})=>{
-    return userStore.isAgent ? <>{children}</> : <Navigate to="/" />
+    return userStore?.isAgent ? <>{children}</> : <Navigate to="/" />
 }
 
 export default AgentRoute;

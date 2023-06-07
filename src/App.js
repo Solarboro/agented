@@ -16,7 +16,7 @@ const Home = lazy(()=>import('./pages/home'));
 const About = lazy(()=>import('./pages/about'));
 const ProductSummary = lazy(()=>import('./pages/product/summary'));
 const ProductDetail = lazy(()=>import('./pages/product/detail'));
-
+const PaymentSummary = lazy(()=>import('./pages/payment'));
 
 const getActive = ({isActive})=>{
   return isActive ? 'activeDemo': '';
@@ -55,6 +55,8 @@ function MyApp() {
                 <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
                 <Route path='product/detail/:productStatus' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
               </Route>
+
+              <Route path='/payment' element={<PaymentSummary />}></Route>
             </Routes>
           </Suspense>
         </HashRouter>

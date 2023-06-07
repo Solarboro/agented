@@ -10,6 +10,12 @@ class UserStore {
         makeAutoObservable(this)
     }
 
+
+    logout =()=>{
+        localStorage.removeItem('user');
+        this.user = {};
+    }
+
     login = ({username, password}, callbk, message)=>{
 
         http.post("login", {username, password}, {headers:{Authorization:''}})
@@ -31,11 +37,11 @@ class UserStore {
     }
 
     get isAgent(){
-        return this.user?.authoritiesList.filter(v=> v.role === 'AGENT').length > 0 ? true : false;
+        return this.user?.authoritiesList?.filter(v=> v.role === 'AGENT').length > 0 ? true : false;
     }
 
     get isStudio(){
-        return this.user?.authoritiesList.filter(v=> v.role === 'STUDIO').length > 0 ? true : false;
+        return this.user?.authoritiesList?.filter(v=> v.role === 'STUDIO').length > 0 ? true : false;
     }
 }
 

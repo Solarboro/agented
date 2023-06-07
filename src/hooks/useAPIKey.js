@@ -15,6 +15,7 @@ export default function useAPIKey(){
 
     // sync up to localstorage
     useEffect(()=>{
+        value || localStorage.removeItem(KEY);
         value && localStorage.setItem(KEY, value);
     },[value]);
 
