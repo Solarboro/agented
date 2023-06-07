@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/551.d6fbf107.chunk.css","mappings":"AAAA,gBAGI,cAIJ,UACI,YACA","sources":["pages/payment/index.scss"],"sourcesContent":[".paymentcontent{\r\n\r\n \r\n    margin: 0 .3em;\r\n\r\n}\r\n\r\n.paymentc{\r\n    height: 100%;\r\n    width: 100%;\r\n}"],"names":[],"sourceRoot":""}
