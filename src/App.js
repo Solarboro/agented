@@ -11,7 +11,7 @@ import { ConfigProvider } from 'antd';
 // dayjs.locale('zh-cn');
 import {App} from 'antd';
 import AgentRoute from './comp/agent';
-
+import AgentHome from './pages/agent';
 const Home = lazy(()=>import('./pages/home'));
 const About = lazy(()=>import('./pages/about'));
 const ProductSummary = lazy(()=>import('./pages/product/summary'));
@@ -44,18 +44,17 @@ function MyApp() {
       <App>
     
         <HashRouter >
-          <NavLink className={getActive} to="/">Home</NavLink>
-          <NavLink className={getActive} to='about'>About</NavLink>
-          <NavLink className={getActive} to='product'>Product</NavLink>
-          {/* <Link to='/'>Home</Link>
-          <Link to='about'>About</Link> */}
           
           <Suspense>
             <Routes>
-              <Route index element={<Home />} />
-              <Route path='about' element={<AgentRoute> <About /></AgentRoute>} />
-              <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
-              <Route path='product/detail/:productStatus' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
+
+              <Route path='/' element={<AgentHome />}>
+                
+                <Route index element={<Home />} />
+                <Route path='about' element={<AgentRoute> <About /></AgentRoute>} />
+                <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
+                <Route path='product/detail/:productStatus' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
+              </Route>
             </Routes>
           </Suspense>
         </HashRouter>
@@ -63,6 +62,7 @@ function MyApp() {
 
       </App>
     </ConfigProvider>
+
     </div>
   )
 }

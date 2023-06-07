@@ -1,0 +1,67 @@
+.appnav-c {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 1em;
+
+    background-color: #006564;
+    color: #FFF;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+
+    height: 7vh;
+ 
+}
+
+
+.nav {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+
+        color: #BBBBBB;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background: #FFFFFF;
+
+        height: 3em;
+
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+        z-index: 2;
+
+        margin-bottom: .5em;
+
+        span {
+
+            color: #006564;
+            // flex: none;
+            // flex-grow: 1;
+        }
+
+}
+
+.nav-active {
+    color: #006564;
+}
+
+.nav a{
+    color: #3d3c3c;
+    text-decoration: none;
+}
+
+
+.appcontent {
+    margin: 0 .3em;
+}

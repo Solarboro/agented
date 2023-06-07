@@ -1,0 +1,66 @@
+
+
+.App-Home{
+    margin: 1em;
+   
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: center;
+
+
+
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    color: grey;
+
+
+    
+    @keyframes grow{
+        from{
+            width: 0;
+        }
+        to {
+            width: 300px;
+        }
+    }
+
+
+@keyframes blink {
+    from {
+        border-right-color: grey;
+    }
+    to {
+        border-right-color: transparent;
+    }
+}
+.line{
+    width: 300px;
+    border-right: 2px solid #EFEFEF;
+    font-size: 20px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.animation{
+    animation: grow 2s steps(44) 1s normal both,
+    blink 500ms steps(44) 1s normal;
+}
+
+.animation2{
+    animation: grow 3s steps(44) 5s normal both,
+    blink 500ms steps(44) infinite normal;
+    animation-delay: 3s;
+   
+}
+
+ 
+}
+.App-Home img{
+    max-width: 100%;
+}
+
+

@@ -1,4 +1,4 @@
-import { AreaChartOutlined, CheckCircleOutlined, DeleteOutlined, MoneyCollectOutlined, PayCircleOutlined,  PlusOutlined, RedoOutlined, UploadOutlined } from '@ant-design/icons';
+import { AreaChartOutlined, CheckCircleOutlined, DeleteOutlined, MoneyCollectOutlined, PayCircleOutlined,  PlusOutlined, RedoOutlined, RollbackOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Descriptions, Divider,  Image, Popconfirm, Select, Space, Table, Tabs, Typography, Upload } from "antd";
 import { observer } from "mobx-react-lite";
 import { productStore } from "../../../store/productStore";
@@ -404,7 +404,7 @@ function ProductDetail () {
                             onConfirm={()=>productStore.fallbackStatus(product.id)}
                          
                         >
-                            <RedoOutlined style={{color: 'red'}}/>
+                            <RollbackOutlined style={{color: '#006564'}}/> 回退
                         </Popconfirm>
                 </>
                 
@@ -419,7 +419,7 @@ function ProductDetail () {
                             onConfirm={()=>productStore.fallbackStatus(product.id)}
                          
                         >
-                            <RedoOutlined style={{color: 'red'}}/>
+                            <RollbackOutlined style={{color: '#006564'}}/> 回退
                         </Popconfirm>
                 </>
             case "pending":
@@ -486,7 +486,7 @@ function ProductDetail () {
 
 
             <Divider orientation='left'>{productStatusConvert(product.productStatus)}</Divider>
-            <Space direction="vertical"  style={{ display: 'flex' }}>
+            <Space.Compact direction="vertical"  style={{ display: 'flex' }}>
                 <Space align='top'>
 
             
@@ -540,7 +540,7 @@ function ProductDetail () {
                 </Upload>
                 <Tabs tabBarExtraContent={{right:<Button icon={<PlusOutlined />} onClick={()=>newRecord()} type="primary">新增</Button>}} defaultActiveKey={getTabsKey()} onChange={setTabIndex} items={items} /> 
 
-            </Space>
+            </Space.Compact>
 
         </>
     )

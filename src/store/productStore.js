@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import http from "../utils/http";
+import { userStore } from "./userStore";
 
 class ProductStore{
 
@@ -14,6 +15,8 @@ class ProductStore{
     products = []
     constructor(){
         makeAutoObservable(this)
+
+        userStore.isLogin && this.index()
     }
 
 
@@ -55,8 +58,10 @@ class ProductStore{
     updateProduct = (basic) =>{
         http.put('product', basic)
         .then(res=>{
-            console.log(res.data)
-            this.product ={...res.data, custOrders: [...res.data.custOrders]}
+          
+            this.products = [...this.products.filter(obj=>obj.id !== res.data.id), res.data]
+            // this.products = [...this.products.filter(obj=>obj.id !== res.data.id), res.data]
+            this.product ={...res.data}
         })
         .catch(console.log);
     }
@@ -86,12 +91,13 @@ class ProductStore{
         let listfilter = this.products.filter(item => item.productStatus === this.filter);
         switch (this.filter) {
             case 'pending':
-                return listfilter.sort((a,b)=> a.cdate - b.cdate);
+                // return listfilter.sort((a,b)=> a.cdate - b.cdate);
             case 'studio':
-                return listfilter.sort((a,b) => a.sampleOrder.manufactureDates - b.sampleOrder.manufactureDates)
+                // return listfilter.sort((a,b) => a.sampleOrder.manufactureDates - b.sampleOrder.manufactureDates)
             case 'factory':
-                return listfilter.sort((a,b) => a.mdate - b.mdate)
-            
+                // return listfilter.sort((a,b) => a.mdate - b.mdate)
+                return listfilter.sort((a,b)=> a.cdate - b.cdate);
+                
             default:
                 return listfilter
         }
@@ -103,7 +109,10 @@ class ProductStore{
 
         console.log(id)
         http.put(`/product/${this.product.id}/studio`, {id})
-        .then(res=> this.product = {...this.product,  sampleOrder: res.data  })
+        .then(res=> {
+            this.product = {...this.product,  sampleOrder: res.data  }
+        
+        })
         .catch(console.log)
     }
 

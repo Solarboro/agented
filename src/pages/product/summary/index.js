@@ -1,5 +1,5 @@
 import {  DeleteOutlined, RedoOutlined } from '@ant-design/icons';
-import { App,  Button, Divider,   List,  Card, Statistic, Segmented, Typography,  Image, Tag,  Popconfirm, Select } from "antd"
+import { App,  Button, Divider,   List,  Card, Statistic, Segmented, Typography,  Image, Tag,  Popconfirm, Select, Space } from "antd"
 import { observer } from 'mobx-react-lite';
 import './index.css';
 import dayjs from 'dayjs';
@@ -19,7 +19,14 @@ import useAPIKey from '../../../hooks/useAPIKey';
 
     useEffect(
         ()=>{
-            userStore.isLogin && productStore.index()
+
+            let itv = setInterval(() => {
+                userStore.isLogin && productStore.index()
+            }, 30000);
+            
+
+            return ()=> clearInterval(itv)
+        
         },[]
     );
 
@@ -131,7 +138,8 @@ import useAPIKey from '../../../hooks/useAPIKey';
         <div className='about'>
 
         <Divider orientation='left'>概要</Divider>
-            
+
+        <Space direction='vertical' style={{display: 'flex'}}>
         <Segmented
             value={productStore.filter}
             onChange={productStore.updateFilter}
@@ -190,6 +198,7 @@ import useAPIKey from '../../../hooks/useAPIKey';
             </>
         }
        
+       </Space>
         </div>
         
     )
