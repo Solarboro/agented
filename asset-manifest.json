@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/agented/static/css/main.3d7ae951.css",
-    "main.js": "/agented/static/js/main.b1ab160f.js",
+    "main.css": "/agented/static/css/main.e3b37385.css",
+    "main.js": "/agented/static/js/main.a154c976.js",
     "static/css/188.8cae6765.chunk.css": "/agented/static/css/188.8cae6765.chunk.css",
     "static/js/188.38c90d66.chunk.js": "/agented/static/js/188.38c90d66.chunk.js",
     "static/css/310.7dccef3c.chunk.css": "/agented/static/css/310.7dccef3c.chunk.css",
@@ -15,8 +15,8 @@
     "static/js/60.0da55291.chunk.js": "/agented/static/js/60.0da55291.chunk.js",
     "static/js/979.6f43ad12.chunk.js": "/agented/static/js/979.6f43ad12.chunk.js",
     "index.html": "/agented/index.html",
-    "main.3d7ae951.css.map": "/agented/static/css/main.3d7ae951.css.map",
-    "main.b1ab160f.js.map": "/agented/static/js/main.b1ab160f.js.map",
+    "main.e3b37385.css.map": "/agented/static/css/main.e3b37385.css.map",
+    "main.a154c976.js.map": "/agented/static/js/main.a154c976.js.map",
     "188.8cae6765.chunk.css.map": "/agented/static/css/188.8cae6765.chunk.css.map",
     "188.38c90d66.chunk.js.map": "/agented/static/js/188.38c90d66.chunk.js.map",
     "310.7dccef3c.chunk.css.map": "/agented/static/css/310.7dccef3c.chunk.css.map",
@@ -31,7 +31,7 @@
     "979.6f43ad12.chunk.js.map": "/agented/static/js/979.6f43ad12.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3d7ae951.css",
-    "static/js/main.b1ab160f.js"
+    "static/css/main.e3b37385.css",
+    "static/js/main.a154c976.js"
   ]
 }
