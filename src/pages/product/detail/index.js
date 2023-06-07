@@ -1,5 +1,5 @@
-import { CheckCircleOutlined, DeleteOutlined, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Descriptions, Divider, FloatButton, Image, Popconfirm, Select, Space, Table, Tabs, Typography } from "antd";
+import { CheckCircleOutlined, DeleteOutlined, MoneyCollectOutlined, PayCircleOutlined,  PlusOutlined, RedoOutlined } from '@ant-design/icons';
+import { Button, Descriptions, Divider,  Image, Popconfirm, Select, Space, Table, Tabs, Typography } from "antd";
 import { observer } from "mobx-react-lite";
 import { productStore } from "../../../store/productStore";
 import dayjs from 'dayjs';
@@ -25,7 +25,19 @@ function ProductDetail () {
     );
 
     
-    const [tabIndex, setTabIndex] = useState(1);
+    const getTabsKey = ()=>{
+
+        switch (productStatus) {
+            case 'factory':
+                return 2;
+        
+            default:
+                return 1;
+        }
+
+    }
+
+    const [tabIndex, setTabIndex] = useState(getTabsKey());
 
 
 
@@ -41,6 +53,10 @@ function ProductDetail () {
     const updateImage = (image) => {
 
         updateProduct({id: product.id, image})
+    }
+    const updateAmount = (amount) => {
+
+        updateProduct({id: product.id, amount})
     }
 
 
@@ -107,7 +123,7 @@ function ProductDetail () {
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>
                      
-                    <a onClick={()=>paymentPanel({...record, date: dayjs(record.date)}, submitPayment)}>编辑</a>
+                    {/* <a onClick={()=>paymentPanel({...record, date: dayjs(record.date)}, submitPayment)}>编辑</a> */}
                 </Space>
             )
         },
@@ -126,10 +142,10 @@ function ProductDetail () {
     }
     const custColumns = [
         {
-            title: '码',
+            title: '尺码',
             dataIndex: 'size',
             key: 'size',
-            width: '.5em'
+            width: '3.5em'
         },{
             title: '胸围',
             dataIndex: 's1',
@@ -171,7 +187,7 @@ function ProductDetail () {
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>
                      
-                    <a onClick={()=>custPanel({...record, date: dayjs(record.date)}, putCutOrder)}>编辑</a>
+                    {/* <a onClick={()=>custPanel({...record, date: dayjs(record.date)}, putCutOrder)}>编辑</a> */}
                 </Space>
             )
         },
@@ -227,7 +243,7 @@ function ProductDetail () {
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>
                      
-                    <a onClick={()=>materialPanel({...record, date: dayjs(record.date)}, putMaterial)}>编辑</a>
+                    {/* <a onClick={()=>materialPanel({...record, date: dayjs(record.date)}, putMaterial)}>编辑</a> */}
                 </Space>
             )
         },
@@ -235,21 +251,21 @@ function ProductDetail () {
 
 
     const onClickCustRow = (record) => {
-        return {
 
-            onClick: ()=>custPanel({...record, date: dayjs(record.date)}, putMaterial)
+        console.log('onclicek to here')
+        return {
+            onDoubleClick: (e)=>custPanel({...record, date: dayjs(record.date)}, putCutOrder)
         }
     }
     const onClickMaterialRow = (record) => {
         return {
-
-            onClick: ()=>materialPanel({...record, date: dayjs(record.date)}, putMaterial)
+            onDoubleClick: (e)=>materialPanel({...record, date: dayjs(record.date)}, putMaterial)
         }
     }
     const onClickPaymentRow = (record) => {
         return {
 
-            onClick: ()=>paymentPanel({...record, date: dayjs(record.date)}, putMaterial)
+            onDoubleClick: ()=>paymentPanel({...record, date: dayjs(record.date)}, submitPayment)
         }
     }
     
@@ -286,7 +302,7 @@ function ProductDetail () {
                     }
                 }
             
-                onRow={onClickPaymentRow}
+                onRow={onClickCustRow}
             />
     },
     {
@@ -370,30 +386,43 @@ function ProductDetail () {
         }
     }
 
-    const getTabsKey = ()=>{
-
-
-        switch (productStatus) {
-            case 'factory':
-                return 2;
-        
-            default:
-                return 1;
-        }
-
-    }
+  
 
     const productStatusConvert=(stauts)=>{
         switch (stauts) {
             case "pending":
                 return '洽谈中'
             case "studio":
-                return '样板中'
+                return  <>
+                        样板中 
+                        <Divider type='vertical'/>
+                        <Popconfirm
+                            placement="topRight"
+                            title="回滚状态"
+                            description={`回退至 洽谈阶段 ?`}
+                            onConfirm={()=>productStore.fallbackStatus(product.id)}
+                         
+                        >
+                            <RedoOutlined style={{color: 'red'}}/>
+                        </Popconfirm>
+                </>
+                
             case "factory":
-                return '投产中'
+                return <>
+                        投产中 
+                        <Divider type='vertical'/>
+                        <Popconfirm
+                            placement="topRight"
+                            title="回滚状态"
+                            description={`回退至 样板阶段 ?`}
+                            onConfirm={()=>productStore.fallbackStatus(product.id)}
+                         
+                        >
+                            <RedoOutlined style={{color: 'red'}}/>
+                        </Popconfirm>
+                </>
             case "pending":
                 return '待尾款'
-        
             default:
                 return '-'
         }
@@ -401,15 +430,31 @@ function ProductDetail () {
     const getOrderCnt = ()=>{
         
         let cnt = 0;
-        
+        product?.custOrders?.forEach(order => {
+            cnt+=order.actCount
+        });
     
 
-        return '-'
+        return cnt 
     }
     const getCostCnt = ()=>{
-        
+        let cnt = 0;
+        product?.materials?.forEach(order => {
+            cnt+=order.amount
+        });
+    
+
+        return cnt 
     }
     const getPaymentCnt = ()=>{
+        let cnt = 0;
+        product?.payments?.forEach(order => {
+            if(order.paid)
+            cnt+=order.amount
+        });
+    
+
+        return cnt 
         
     }
 
@@ -428,7 +473,7 @@ function ProductDetail () {
 
 
                     {/* <Descriptions column={{xs:2, s:2}} layout='vertical'> */}
-                    <Descriptions column={1}>
+                    <Descriptions  column={1}>
                         <Descriptions.Item label='编号' ><Typography.Text editable={{onChange: updatemodel}} >{product.model}</Typography.Text></Descriptions.Item>
                         <Descriptions.Item label='款式' ><Typography.Text editable={{onChange: updateStyle}} >{product.style}</Typography.Text></Descriptions.Item>
                         {/* <Descriptions.Item label='日期'>{dayjs(product.cdate).format('YYYY.MM.DD')}</Descriptions.Item> */}
@@ -436,6 +481,18 @@ function ProductDetail () {
                         <Descriptions.Item label='板间'><Select onChange={updateStudio} style={{width: '100%'}} defaultValue={product.sampleOrder?.studioName} options={[{value: 1, label: 701},{value: 2, label: '其他板间'}]}/></Descriptions.Item>
                         <Descriptions.Item label='板师'>{product.sampleOrder?.producerName ? <>{product.sampleOrder.producerName} - {product.sampleOrder.cost}</> : '-' }</Descriptions.Item>
                         {/* <Descriptions.Item  label='备注'>dsfasfasdfasdfsafsajflasfadskflsjflfjsaaldsjf </Descriptions.Item> */}
+                        <Descriptions.Item  label='件数'>{getOrderCnt()}</Descriptions.Item>
+                        <Descriptions.Item  label='费用'>{getCostCnt()} </Descriptions.Item>
+                        <Descriptions.Item  label='已收款'>
+                            <Typography.Text type='danger'>
+                                <Space><MoneyCollectOutlined/>{getPaymentCnt()}</Space>
+                            </Typography.Text>
+                        </Descriptions.Item>
+                        <Descriptions.Item  label='总售价'>  
+                            <Typography.Text type='success' editable={{onChange:updateAmount}}>
+                            <Space><PayCircleOutlined />{product.amount > 0 ? product.amount : 0}</Space>
+                            </Typography.Text>
+                        </Descriptions.Item>
                     </Descriptions>
                 </Space>
 

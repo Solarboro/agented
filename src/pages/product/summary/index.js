@@ -74,7 +74,7 @@ import useAPIKey from '../../../hooks/useAPIKey';
                 break;
             case 'studio':
                 list.push(sampleCost);
-                list.push(fallb)
+                // list.push(fallb)
                 break;
         
             case 'factory':
@@ -84,7 +84,7 @@ import useAPIKey from '../../../hooks/useAPIKey';
                 }
                 const cost = <Tag color='error'>{factoryCost} 元</Tag>
                 list.push(cost);
-                list.push(fallb);
+                // list.push(fallb);
                 break
             default:
                 break;
