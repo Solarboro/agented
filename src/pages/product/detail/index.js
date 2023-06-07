@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, DeleteOutlined, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Descriptions, Divider, FloatButton, Image, Popconfirm, Select, Space, Table, Tabs, Typography } from "antd";
 import { observer } from "mobx-react-lite";
 import { productStore } from "../../../store/productStore";
@@ -13,7 +13,9 @@ import useMaterialPanel from '../../../comp/material';
 
 function ProductDetail () {
 
+    const {productStatus} = useParams()
     const nav = useNavigate();
+
     const {product, updateProduct, updateStudio} = productStore;
     useEffect(
         ()=>{
@@ -232,6 +234,24 @@ function ProductDetail () {
     ]
 
 
+    const onClickCustRow = (record) => {
+        return {
+
+            onClick: ()=>custPanel({...record, date: dayjs(record.date)}, putMaterial)
+        }
+    }
+    const onClickMaterialRow = (record) => {
+        return {
+
+            onClick: ()=>materialPanel({...record, date: dayjs(record.date)}, putMaterial)
+        }
+    }
+    const onClickPaymentRow = (record) => {
+        return {
+
+            onClick: ()=>paymentPanel({...record, date: dayjs(record.date)}, putMaterial)
+        }
+    }
     
   const items = [
     {
@@ -255,17 +275,18 @@ function ProductDetail () {
 
                         return (
                             <Table.Summary.Row>
-                                <Table.Summary.Cell index={0}>{'总'}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
-                                <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
-                                <Table.Summary.Cell index={3}>-</Table.Summary.Cell>
-                                <Table.Summary.Cell index={4}>{totalPreCount}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={5}>{totalActCount}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={1}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={2}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={3}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={4}>{totalPreCount > 0 ? totalPreCount : ''}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={5}>{totalActCount > 0 ? totalActCount: ''}</Table.Summary.Cell>
                             </Table.Summary.Row>
                         )
                     }
                 }
             
+                onRow={onClickPaymentRow}
             />
     },
     {
@@ -285,17 +306,17 @@ function ProductDetail () {
 
                         return (
                             <Table.Summary.Row>
-                                <Table.Summary.Cell index={0}>{'总'}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
-                                <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
-                                <Table.Summary.Cell index={3}>-</Table.Summary.Cell>
-                                <Table.Summary.Cell index={4}>{total}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={1}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={2}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={3}></Table.Summary.Cell>
+                                <Table.Summary.Cell index={4}>{total>0?total:''}</Table.Summary.Cell>
                             </Table.Summary.Row>
                         )
                     }
                 }
-            
-            
+                onRow={onClickMaterialRow}
+        
             />
     },
     {
@@ -315,14 +336,15 @@ function ProductDetail () {
 
                     return (
                         <Table.Summary.Row>
-                            <Table.Summary.Cell index={0}>{'总'}</Table.Summary.Cell>
-                            <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
-                            <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
-                            <Table.Summary.Cell index={3}>{total}</Table.Summary.Cell>
+                            <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                            <Table.Summary.Cell index={1}></Table.Summary.Cell>
+                            <Table.Summary.Cell index={2}></Table.Summary.Cell>
+                            <Table.Summary.Cell index={3}>{total>0?total:''}</Table.Summary.Cell>
                         </Table.Summary.Row>
                     )
                 }
             }
+            onRow={onClickPaymentRow}
             />
     },
   ];
@@ -348,6 +370,49 @@ function ProductDetail () {
         }
     }
 
+    const getTabsKey = ()=>{
+
+
+        switch (productStatus) {
+            case 'factory':
+                return 2;
+        
+            default:
+                return 1;
+        }
+
+    }
+
+    const productStatusConvert=(stauts)=>{
+        switch (stauts) {
+            case "pending":
+                return '洽谈中'
+            case "studio":
+                return '样板中'
+            case "factory":
+                return '投产中'
+            case "pending":
+                return '待尾款'
+        
+            default:
+                return '-'
+        }
+    }
+    const getOrderCnt = ()=>{
+        
+        let cnt = 0;
+        
+    
+
+        return '-'
+    }
+    const getCostCnt = ()=>{
+        
+    }
+    const getPaymentCnt = ()=>{
+        
+    }
+
     return (
         <>
 
@@ -363,28 +428,21 @@ function ProductDetail () {
 
 
                     {/* <Descriptions column={{xs:2, s:2}} layout='vertical'> */}
-                    <Descriptions >
+                    <Descriptions column={1}>
                         <Descriptions.Item label='编号' ><Typography.Text editable={{onChange: updatemodel}} >{product.model}</Typography.Text></Descriptions.Item>
                         <Descriptions.Item label='款式' ><Typography.Text editable={{onChange: updateStyle}} >{product.style}</Typography.Text></Descriptions.Item>
-                        <Descriptions.Item label='日期'>{dayjs(product.cdate).format('YYYY.MM.DD')}</Descriptions.Item>
-                        <Descriptions.Item label='状态'>{product.productStatus}</Descriptions.Item>
-                        <Descriptions.Item label='板间'><Select onChange={updateStudio} style={{width: '100%'}} defaultValue={product.sampleOrder?.studioName} options={[{value: 1, label: 701},{value: 2, label: '外部'}]}/></Descriptions.Item>
+                        {/* <Descriptions.Item label='日期'>{dayjs(product.cdate).format('YYYY.MM.DD')}</Descriptions.Item> */}
+                        <Descriptions.Item label='状态'>{productStatusConvert(product.productStatus)}</Descriptions.Item>
+                        <Descriptions.Item label='板间'><Select onChange={updateStudio} style={{width: '100%'}} defaultValue={product.sampleOrder?.studioName} options={[{value: 1, label: 701},{value: 2, label: '其他板间'}]}/></Descriptions.Item>
                         <Descriptions.Item label='板师'>{product.sampleOrder?.producerName ? <>{product.sampleOrder.producerName} - {product.sampleOrder.cost}</> : '-' }</Descriptions.Item>
-                        <Descriptions.Item  label='备注'>dsfasfasdfasdfsafsajflasfadskflsjflfjsaaldsjf </Descriptions.Item>
+                        {/* <Descriptions.Item  label='备注'>dsfasfasdfasdfsafsajflasfadskflsjflfjsaaldsjf </Descriptions.Item> */}
                     </Descriptions>
                 </Space>
 
-                <Tabs defaultActiveKey={tabIndex} onChange={setTabIndex} items={items} /> 
+                <Tabs tabBarExtraContent={{right:<Button icon={<PlusOutlined />} onClick={()=>newRecord()} type="primary">新增</Button>}} defaultActiveKey={getTabsKey()} onChange={setTabIndex} items={items} /> 
 
             </Space>
 
-            <FloatButton
-                shape="circle"
-                type="primary"
-                onClick={()=>newRecord()}
-                icon={<PlusCircleOutlined />}
-            />
-            
         </>
     )
 

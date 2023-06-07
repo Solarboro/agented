@@ -55,7 +55,7 @@ function MyApp() {
               <Route index element={<Home />} />
               <Route path='about' element={<AgentRoute> <About /></AgentRoute>} />
               <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
-              <Route path='product/detail' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
+              <Route path='product/detail/:productStatus' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
             </Routes>
           </Suspense>
         </HashRouter>

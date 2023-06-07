@@ -161,7 +161,7 @@ import useAPIKey from '../../../hooks/useAPIKey';
                 >
            
                     <List.Item.Meta  
-                        onClick={()=>{productStore.product=value; nav(`/product/detail`)}}
+                        onClick={()=>{productStore.product=value; nav(`/product/detail/${productStore.filter}`)}}
                         avatar={<Image
                                     width={30}
                                     height={40}
