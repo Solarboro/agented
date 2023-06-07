@@ -110,7 +110,8 @@ class ProductStore{
         console.log(id)
         http.put(`/product/${this.product.id}/studio`, {id})
         .then(res=> {
-            this.product = {...this.product,  sampleOrder: res.data  }
+            this.products.splice(this.products.findIndex(v=>v.id === this.product.id), 1)
+            this.product = {...this.product,  sampleOrder: res.data}
         
         })
         .catch(console.log)

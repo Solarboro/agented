@@ -274,6 +274,9 @@ function ProductDetail () {
       children:
             <Table pagination={{position:[]}}  showHeader={true} columns={custColumns} dataSource={productStore.product?.custOrders?.map(value=> ({key: `custOrders${value.id}`, ...value }) )} 
             
+                scroll={{
+                    y: 240
+                }}
                 summary={
                     (pageData) => {
 
@@ -308,6 +311,9 @@ function ProductDetail () {
       label: `物料 & 工厂`,
       children: 
             <Table pagination={{position:[]}}  showHeader={true} columns={materialColumns} dataSource={productStore.product?.materials?.map(value=> ({key: `materials${value.id}`, ...value }) )} 
+                scroll={{
+                    y: 240
+                }}
                 summary={
                     (pageData) => {
 
@@ -338,6 +344,11 @@ function ProductDetail () {
       label: `付款记录`,
       children:  
             <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={productStore.product?.payments?.map(value=> ({key: `payments${value.id}`, ...value }) )} 
+            
+            scroll={{
+                y: 240
+            }}
+            
             summary={
                 (pageData) => {
 
