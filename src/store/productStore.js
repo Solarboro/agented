@@ -13,6 +13,7 @@ class ProductStore{
     filter = 'pending'
     product = {}
     products = []
+    studio701Products = []
 
     paymentDetail = {}
     constructor(){
@@ -21,6 +22,12 @@ class ProductStore{
         userStore.isLogin && this.index()
     }
 
+    //
+    get701Products = () => {
+        http.get('product/701')
+        .then( res => this.studio701Products = [...res.data])
+        .catch(console.log);
+    }
 
     // snap
     setPaymentDetail = (obj) => {
@@ -120,6 +127,12 @@ class ProductStore{
         
         })
         .catch(console.log)
+    }
+
+    updateStudioDetail = (productId, requestBody)=>{
+        http.put(`product/${productId}/sample`, requestBody)
+        .then(res=> this.get701Products())
+        .catch(console.log);
     }
 
     // Payment 

@@ -1,4 +1,4 @@
-import { Button, Divider, QRCode } from 'antd';
+import { App, Button, Divider, QRCode } from 'antd';
 import './home.scss'
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { userStore } from '../../store/userStore';
 function HomeEntity () {
 
     const nav = useNavigate()
-
+    const {message} = App.useApp()
 
     const toHome = ()=>{
 
@@ -16,9 +16,11 @@ function HomeEntity () {
         case userStore.isAgent :
           nav('/product')
           break;
-      
+        case userStore.isStudio :
+          nav('/studio');
+          break;
         default:
-          nav("/")
+          message.info('请登录!').then(()=>nav("/"))
           break;
       }
     }

@@ -12,6 +12,7 @@ import { ConfigProvider } from 'antd';
 import {App} from 'antd';
 import AgentRoute from './comp/agent';
 import AgentHome from './pages/agent';
+import Studiodetail from './pages/studiodetail';
 const Home = lazy(()=>import('./pages/home'));
 const About = lazy(()=>import('./pages/about'));
 const ProductSummary = lazy(()=>import('./pages/product/summary'));
@@ -51,12 +52,14 @@ function MyApp() {
               <Route path='/' element={<AgentHome />}>
                 
                 <Route index element={<Home />} />
+                <Route path='/studio' element={<Studiodetail />}></Route>
                 <Route path='about' element={<AgentRoute> <About /></AgentRoute>} />
                 <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
                 <Route path='product/detail/:productStatus' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
               </Route>
 
               <Route path='/payment' element={<PaymentSummary />}></Route>
+
             </Routes>
           </Suspense>
         </HashRouter>

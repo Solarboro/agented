@@ -6,12 +6,12 @@ export default function useLogin(){
 
     const {modal} = App.useApp();
     const [loginForm] = Form.useForm();
+
     const content = (
         <Form
             size='middle'
             preserve={false}
             form={loginForm}
-            initialValues={{username: 'solar', password: 'abcd1234'}}
         >
             
 

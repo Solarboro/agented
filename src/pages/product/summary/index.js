@@ -18,13 +18,16 @@ import CountUp from 'react-countup';
     useEffect(
         ()=>{
 
-            let itv = setInterval(() => {
-                userStore.isLogin && productStore.index()
-            }, 30000);
+            // let itv = setInterval(() => {
+            //     userStore.isLogin && productStore.index()
+            // }, 30000);
             
 
-            return ()=> clearInterval(itv)
+            // return ()=> clearInterval(itv)
         
+            //
+                userStore.isLogin && productStore.index()
+
         },[]
     );
 

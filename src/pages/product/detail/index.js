@@ -515,7 +515,7 @@ function ProductDetail () {
                         {/* <Descriptions.Item label='日期'>{dayjs(product.cdate).format('YYYY.MM.DD')}</Descriptions.Item> */}
                         {/* <Descriptions.Item label='状态'>{productStatusConvert(product.productStatus)}</Descriptions.Item> */}
                         <Descriptions.Item label='板间'><Select onChange={updateStudio} style={{width: '100%'}} defaultValue={product.sampleOrder?.studioName} options={[{value: 1, label: 701},{value: 2, label: '其他板间'}]}/></Descriptions.Item>
-                        <Descriptions.Item label='板师'>{product.sampleOrder?.producerName ? <>{product.sampleOrder.producerName} - {product.sampleOrder.cost}</> : '-' }</Descriptions.Item>
+                        <Descriptions.Item label='板师'>{product.sampleOrder?.producerName ? <>{product.sampleOrder.producerName} ({product.sampleOrder.cost}小时)</> : '-' }</Descriptions.Item>
                         {/* <Descriptions.Item  label='备注'>dsfasfasdfasdfsafsajflasfadskflsjflfjsaaldsjf </Descriptions.Item> */}
                         <Descriptions.Item  label='件数'>
                                 <Space>
