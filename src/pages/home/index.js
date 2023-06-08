@@ -3,6 +3,7 @@ import './home.scss'
 import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { userStore } from '../../store/userStore';
+import { BarChartOutlined, CaretRightOutlined } from '@ant-design/icons';
 
 function HomeEntity () {
 
@@ -23,6 +24,10 @@ function HomeEntity () {
           message.info('请登录!').then(()=>nav("/"))
           break;
       }
+    }
+
+    const toStatistic =() =>{
+      message.warning('统计模块 即将开放 请等待~~~');
     }
 
 
@@ -50,7 +55,8 @@ function HomeEntity () {
 
         
 
-            <Button type='primary' size='middle' onClick={toHome} style={{width: '50%'}}>开 始 !</Button>
+            <Button icon={<CaretRightOutlined />} type='primary' size='middle' onClick={toHome} style={{width: '50%'}}>开 始</Button>
+            <Button icon={<BarChartOutlined />} type='primary' size='middle' onClick={toStatistic} style={{width: '50%'}}>统 计</Button>
         </div>
     )
 }

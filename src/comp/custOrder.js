@@ -27,6 +27,9 @@ export default function useCustOrderPanel({title}){
             <Form.Item name="tolerance" label="浮动件数"  >
               <InputNumber />
             </Form.Item>
+            <Form.Item name="batch" label="出厂批次"  >
+              <InputNumber />
+            </Form.Item>
           </Space>
 
           <Space.Compact>

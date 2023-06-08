@@ -197,7 +197,7 @@ function ProductDetail () {
             key: 'actCount',
             width: '3.5em'
         },{
-            title: '批号',
+            title: '批次',
             dataIndex: 'batch',
             key: 'batch',
             width: '3.5em'

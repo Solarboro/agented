@@ -40,7 +40,7 @@ export default function usePaymentPanel({title}){
           </Space>  
 
           <Space>
-          <Form.Item name="batch" label="出厂批次" >
+          <Form.Item name="batch" label="对应批次" >
             <InputNumber />
           </Form.Item>
 

@@ -159,7 +159,8 @@ function PaymentSummary(){
                 </Space>
 
 
-                <Table pagination={{position:[]}}  showHeader={true} columns={custColumns} dataSource={productStore.product?.custOrders?.map(value=> ({key: `custOrders${value.id}`, ...value }) )} 
+                {productStore.product?.custOrders?.filter(item=>item.preCount > 0) && 
+                <Table pagination={{position:[]}}  showHeader={true} columns={custColumns} dataSource={productStore.product?.custOrders?.filter(item=>item.preCount > 0).map(value=> ({key: `custOrders${value.id}`, ...value }) )} 
             
                    
                         summary={
@@ -189,6 +190,7 @@ function PaymentSummary(){
                         }
                     
                 />
+                }
 
 
                 <Table pagination={{position:[]}}  showHeader={true} columns={paymentColumns} dataSource={payments?.map(value=> ({key: `payments${value.id}`, ...value }) )} 
