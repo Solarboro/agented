@@ -38,11 +38,18 @@ export default function usePaymentPanel({title}){
             <InputNumber />
           </Form.Item>
           </Space>  
-      
+
+          <Space>
+          <Form.Item name="batch" label="出厂批次" >
+            <InputNumber />
+          </Form.Item>
+
           <Form.Item name="paid" label="支付状态" valuePropName="checked"  >
             <Switch />
           </Form.Item>
+          </Space>
         </Form>
+        
     )
 
     return (raw, onSubmit)=>{
