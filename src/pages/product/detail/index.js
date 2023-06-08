@@ -16,7 +16,7 @@ function ProductDetail () {
     const {productStatus} = useParams()
     const nav = useNavigate();
 
-    const {product, updateProduct, updateStudio} = productStore;
+    const {product, updateProduct, updateStudio, setPaymentDetail} = productStore;
     useEffect(
         ()=>{
             if(!product.id)
@@ -93,7 +93,7 @@ function ProductDetail () {
             dataIndex: 'date',
             key: 'date',
             render: (_, {date}) => (
-                dayjs(date).format("YYYY.MM.DD") ? dayjs(date).format("YYYY.MM.DD") : "-"
+                date ? dayjs(date).format("YYYY.MM.DD") : "-"
             )
 
         },{
@@ -122,7 +122,7 @@ function ProductDetail () {
                         <DeleteOutlined  style={{color: 'red'}}/>
                     </Popconfirm>
                      
-                    <AreaChartOutlined  style={{color: '#006564'}} />
+                   <span onClick={()=>{setPaymentDetail({...product, materials:[]}); nav('/payment')}}> <AreaChartOutlined  style={{color: '#006564'}}  /></span>
                     {/* <a onClick={()=>paymentPanel({...record, date: dayjs(record.date)}, submitPayment)}>编辑</a> */}
                 </Space>
             )

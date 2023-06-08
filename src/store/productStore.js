@@ -13,6 +13,8 @@ class ProductStore{
     filter = 'pending'
     product = {}
     products = []
+
+    paymentDetail = {}
     constructor(){
         makeAutoObservable(this)
 
@@ -21,6 +23,9 @@ class ProductStore{
 
 
     // snap
+    setPaymentDetail = (obj) => {
+        this.paymentDetail = {...obj}
+    }
     selectd = (object) => {
         this.product = {...object}
     }
@@ -108,10 +113,10 @@ class ProductStore{
     updateStudio = (id) => {
 
         console.log(id)
-        http.put(`/product/${this.product.id}/studio`, {id})
+        http.put(`product/${this.product.id}/studio`, {id})
         .then(res=> {
-            this.products.splice(this.products.findIndex(v=>v.id === this.product.id), 1)
             this.product = {...this.product,  sampleOrder: res.data}
+            this.products.splice(this.products.findIndex(v=>v.id === this.product.id), 1, this.product)
         
         })
         .catch(console.log)

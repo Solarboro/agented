@@ -49,15 +49,6 @@ const udata = [
         userStore.login(values, accessToken =>{ setValue(accessToken); callbk();}, message)
     }
 
-
-    // tips
-
-    const goToDetail = (item) => {
-        console.info(item.payments)
-        productStore.selectd(item);
-        nav('/product/detail');
-    }
-
     // action buton
     const actionList = (item) => {
 

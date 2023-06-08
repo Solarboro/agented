@@ -3,6 +3,7 @@ import { message } from "antd";
 import nProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { useNavigate } from "react-router-dom";
+import { userStore } from "../store/userStore";
 nProgress.configure({showSpinner: false});
 
 
@@ -51,7 +52,11 @@ http.interceptors.response.use(
 
             switch (error?.response?.status) {
                 case 403:
-                    message.warning("请重新登录 !")
+                    message.warning("请重新登录 !").then(()=>{
+                        userStore.logout();
+                        window.location.href="/"
+                    })
+                    
                     break;
             
                 default:

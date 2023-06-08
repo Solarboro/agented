@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { App, DatePicker, Divider, Form, Input, InputNumber, Select, Switch } from "antd";
+import { App, DatePicker, Divider, Form, Input, InputNumber, Select, Space, Switch } from "antd";
 import dayjs from 'dayjs'
 
 export default function usePaymentPanel({title}){
@@ -29,6 +29,7 @@ export default function usePaymentPanel({title}){
             />
           </Form.Item>
 
+          <Space >
           <Form.Item name="date" label="支付日期" rules={[{type: 'object'}]} >
             <DatePicker inputReadOnly  />
           </Form.Item>
@@ -36,7 +37,7 @@ export default function usePaymentPanel({title}){
           <Form.Item name="amount" label="支付金额"  >
             <InputNumber />
           </Form.Item>
-
+          </Space>  
       
           <Form.Item name="paid" label="支付状态" valuePropName="checked"  >
             <Switch />

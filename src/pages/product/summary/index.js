@@ -10,9 +10,7 @@ import { userStore } from '../../../store/userStore';
 import { productStore } from '../../../store/productStore';
 import useLogin from '../../../comp/login';
 import useAPIKey from '../../../hooks/useAPIKey';
-
-
-
+import CountUp from 'react-countup';
 
  function ProductSummary() {
 
@@ -98,12 +96,16 @@ import useAPIKey from '../../../hooks/useAPIKey';
         
     }
 
+
+    const formatter = (value) => <CountUp end={value} separator="," />
+
     const getkanB = () =>{
         
         return productStore.getFilterTemplate.map(item => 
             (
                 {
                     label: <Statistic
+                                formatter={formatter}
                                 title={item.title}
                                 value={item.value}
                                 valueStyle={{

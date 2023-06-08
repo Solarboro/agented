@@ -33,7 +33,7 @@ function HomeEntity () {
                 
                 errorLevel="H"
                 value={window.location.href}
-                icon={`${window.location.href}/favicon.ico`}
+                // icon={`${window.location.href}/favicon.ico`}
             />
             QR Code
             </Divider>
