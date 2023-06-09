@@ -7,11 +7,13 @@ import { CheckCircleOutlined, CloseCircleOutlined, PayCircleOutlined } from "@an
 import './index.scss';
 import dayjs from 'dayjs';
 import bg from '../../bg.jpg';
+import { userStore } from "../../store/userStore";
 
 function PaymentSummary(){
     //
     const nav = useNavigate();
-    const {id, qr, image, style, model, amount, custOrders, payments} = productStore.paymentDetail;
+    const {user} = userStore;
+    const {id, qr,custName, image, style, model, amount, custOrders, payments} = productStore.paymentDetail;
     useEffect(
         ()=>{
             if(!id)
@@ -108,7 +110,23 @@ function PaymentSummary(){
         },{
             title: '支行',
             dataIndex: 'branch',
-            key: 'branch'
+            key: 'branch',
+        
+        }
+    ]
+
+    
+    const BankData = [
+        {
+            bank: user.bank1,
+            branch: user.branch1,
+            account: user.account1,
+            owner: user.owner1
+        },{
+            bank: user.bank2,
+            branch: user.branch2,
+            account: user.account2,
+            owner: user.owner2
         }
     ]
 
@@ -156,11 +174,8 @@ function PaymentSummary(){
     return (
         <div className="paymentc" >
 
-<Typography.Text keyboard > XXX  XXX XXX公司</Typography.Text>
-            <Typography.Text keyboard > XXX  XXX XXX公司</Typography.Text>
-            <Typography.Text keyboard > XXX  XXX XXX公司</Typography.Text>            <Typography.Text keyboard > XXX  XXX XXX公司</Typography.Text>
-            <Typography.Text keyboard > XXX  XXX XXX公司</Typography.Text>
-            <Typography.Text keyboard > XXX  XXX XXX公司</Typography.Text>
+            <Divider>客单 & 账单</Divider>
+          
             <Space className="paymentcontent" direction="vertical" style={{display:'flex'}}>
           
                 <Space  >
@@ -181,11 +196,7 @@ function PaymentSummary(){
                 <Card >
                     <Descriptions  column={1}>
              
-                    <Descriptions.Item label='客户' >{'梁 女士/先生'}</Descriptions.Item>
-                    <Descriptions.Item label='公司' >{'客订女装有限公司'}</Descriptions.Item>
-                
-                    
-                    
+                    <Descriptions.Item label='客户' >{custName}</Descriptions.Item>
 
                         <Descriptions.Item label='编号' >{model}</Descriptions.Item>
                         <Descriptions.Item  label='件数'>
@@ -216,12 +227,14 @@ function PaymentSummary(){
                 />
 
                 
-                <Table pagination={{position:[]}}  showHeader={true} columns={bankAccount} dataSource={payments?.map(value=> ({key: `payments${value.id}`, ...value }) )} 
+                <Table pagination={{position:[]}}  showHeader={true} columns={bankAccount} dataSource={BankData?.map(value=> ({key: `banks${value.acount}`, ...value }) )} 
                 />
 
-                
                 {getQR()}
             </Space>
+
+            <Divider>客单 & 账单</Divider>
+
         </div>
     )
 }

@@ -54,7 +54,6 @@ http.interceptors.response.use(
                 case 403:
                     message.warning("请重新登录 !").then(()=>{
                         userStore.logout();
-                        window.location.href="/"
                     })
                     
                     break;

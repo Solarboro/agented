@@ -520,6 +520,7 @@ function ProductDetail () {
                 <Card>
                     <Descriptions  column={1}>
              
+                        <Descriptions.Item label='客户' ><Typography.Text editable={{onChange: v=>updateProduct({id: product.id, custName:v})}} >{product.custName}</Typography.Text></Descriptions.Item>
                         <Descriptions.Item label='编号' ><Typography.Text editable={{onChange: updatemodel}} >{product.model}</Typography.Text></Descriptions.Item>
                         <Descriptions.Item label='款式' ><Typography.Text editable={{onChange: updateStyle}} >{product.style}</Typography.Text></Descriptions.Item>
                      
