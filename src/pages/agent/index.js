@@ -87,7 +87,7 @@ function AgentHome(){
           case '21':
             userStore.logout();
             setValue('');
-            navt("/");
+            navt(process.env.REACT_APP_MAIN_URL);
           default:
             break;
         }
@@ -97,7 +97,7 @@ function AgentHome(){
         <>
        
         <div className='appnav-c'>
-            <HomeOutlined onClick={() => navt("/")}/>
+            <HomeOutlined onClick={() => navt(process.env.REACT_APP_MAIN_URL)}/>
 
             <div>G a l a x y . A r t</div>
 

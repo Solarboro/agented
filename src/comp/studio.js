@@ -4,7 +4,7 @@ import { userStore } from "../store/userStore"
 
 
 const StudioRoute =  ({children})=>{
-    return userStore.isStudio ? <>{children}</> : <Navigate to="/" />
+    return userStore.isStudio ? <>{children}</> : <Navigate to={process.env.REACT_APP_MAIN_URL} />
 }
 
 export default StudioRoute;
