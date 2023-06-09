@@ -21,7 +21,7 @@ function HomeEntity () {
           nav('/studio');
           break;
         default:
-          message.info('请登录!').then(()=>nav(process.env.REACT_APP_MAIN_URL))
+          message.info('请登录!').then(()=>nav("/"))
           break;
       }
     }
