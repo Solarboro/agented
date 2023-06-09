@@ -13,6 +13,8 @@ import {App} from 'antd';
 import AgentRoute from './comp/agent';
 import AgentHome from './pages/agent';
 import Studiodetail from './pages/studiodetail';
+import PersonalInfo from './pages/personalInfo';
+import PaymentInfo from './pages/paymentInfo';
 const Home = lazy(()=>import('./pages/home'));
 const About = lazy(()=>import('./pages/about'));
 const ProductSummary = lazy(()=>import('./pages/product/summary'));
@@ -53,6 +55,8 @@ function MyApp() {
                 
                 <Route index element={<Home />} />
                 <Route path='/studio' element={<Studiodetail />}></Route>
+                <Route path='/pinfo' element={<PersonalInfo />}></Route>
+                <Route path='/payinfo' element={<PaymentInfo />}></Route>
                 <Route path='about' element={<AgentRoute> <About /></AgentRoute>} />
                 <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
                 <Route path='product/detail/:productStatus' element={<AgentRoute> <ProductDetail /></AgentRoute>} />

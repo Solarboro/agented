@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { Outlet, useNavigate } from "react-router-dom";
 import './index.scss'
-import { HomeOutlined, LockOutlined, LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { HomeOutlined, LockOutlined, LoginOutlined, LogoutOutlined, PayCircleOutlined, UserOutlined } from "@ant-design/icons";
 import { userStore } from "../../store/userStore";
 import useLogin from "../../comp/login";
 import useAPIKey from "../../hooks/useAPIKey";
@@ -28,7 +28,7 @@ function AgentHome(){
 
     // dropdown
     const getItems = () => {
-        let items = [
+        let normal = [
           {
               key: '11',
               label: '个人信息', 
@@ -39,36 +39,48 @@ function AgentHome(){
               label: '密码修改', 
               icon: <LockOutlined className="site-form-item-icon" />
           },
-          {
-              type: 'divider'
-          },
           
         ];
+        let last = [
+          {
+            type: 'divider'
+          },{
+              
+            key: '21',
+            label: '退出登录',
+            icon: <LogoutOutlined />
+          }
+        ]
 
-        //
-        items.push(
-            {
-              key: '21',
-              label: '退出登录',
-              icon: <LogoutOutlined />
-            }
-          );
+        let agent = [
+          {
+            type: 'divider'
+          },{
+              
+            key: '31',
+            label: '收款信息',
+            icon: <PayCircleOutlined />
+          }
+        ]
+
+        if(userStore.isAgent) 
+          return normal.concat(agent).concat(last);
     
-        return items;
+        return normal.concat(last);
     }
 
     const onClick = ({key})=>{
         switch (key) {
           case '11':
-            // setOpen(true);
+            navt("/pinfo");
             break;
           case '12':
             // form.resetFields();
             // setPassModal(true);
             break;
           case '31':
-            // newUserForm.resetFields();
-            // setopenNewUser(true);
+            navt("/payinfo");
+
             break;
           case '32':
             break;

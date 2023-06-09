@@ -31,6 +31,16 @@ class UserStore {
         })
     }
 
+    updateUser = (properties)=>{
+        http.put('user', properties)
+        .then(
+            res=>{
+                this.user = {...res.data};
+                localStorage.setItem('user', JSON.stringify(this.user));
+            }
+        )
+        .catch(console.log)
+    }
 
     get isLogin (){
         return this.user?.id ? true : false;
