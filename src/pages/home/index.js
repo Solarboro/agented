@@ -27,7 +27,8 @@ function HomeEntity () {
     }
 
     const toStatistic =() =>{
-      message.warning('统计模块 即将开放 请等待~~~');
+      nav('/statistic');
+
     }
 
 

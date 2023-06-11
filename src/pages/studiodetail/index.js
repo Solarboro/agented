@@ -13,7 +13,16 @@ function StudioPanel(){
 
     useEffect(
         ()=>{
+            // load on init
             productStore.get701Products();
+
+            // load on following action
+            let intRefresh = setInterval(
+                ()=> productStore.get701Products(), 30000
+            )
+            
+            return ()=> clearInterval(intRefresh)
+        
         },[]
     );
 
@@ -32,18 +41,27 @@ function StudioPanel(){
         )
     }
 
+
+    const getUserList = ()=>{
+        let idSet = new Set();
+        let userList = [];
+        
+        studio701Products.forEach(element => {
+            if(idSet.has(element.agentId))
+                return;
+            idSet.add(element.agentId)
+            userList.push({value: element.agentId, label: element.agentFullname})
+        })
+
+
+        // console.log(userList)
+        return userList;
+    }
     //
-    const userList = [
-        {label: 'Solar', value: 1},
-        {label: '明', value: 3},
-        {label: '梁生', value: 4},
-        {label: '阿城', value: 5},
-        {label: '阿景', value: 6},
-        {label: '军', value: 7},
-    ];
+    const userList = getUserList();
 
     // 
-    const [radioValue, setRadioValue] = useState(1);
+    const [radioValue, setRadioValue] = useState();
     const radioChange = ({target: {value}}) => {
         setRadioValue(value)
     }
@@ -63,12 +81,12 @@ function StudioPanel(){
                 />
             </Card>
             <Card>
-                <Descriptions>
+                <Descriptions column={1}>
                     <Descriptions.Item label='所属'>{item.agentFullname}</Descriptions.Item>
                     <Descriptions.Item label='款式'>{item.style}</Descriptions.Item>
                     <Descriptions.Item label='编号'>{item.model}</Descriptions.Item>
-                    <Descriptions.Item label='用时'><InputNumber defaultValue={item?.sampleOrder?.cost} min={-1} onChange={value => updateCost(item.id, value)} /> </Descriptions.Item>
-                    <Descriptions.Item label='打板日期'><DatePicker defaultValue={dayjs(item?.sampleOrder?.manufactureDate)} inputReadOnly  onChange={(value)=>updateDate(item.id, value)}/></Descriptions.Item>
+                    <Descriptions.Item label='用时'><InputNumber value={item?.sampleOrder?.cost} min={-1} onChange={value => updateCost(item.id, value)} /> </Descriptions.Item>
+                    <Descriptions.Item label='打板日期'><DatePicker value={dayjs(item?.sampleOrder?.manufactureDate)} inputReadOnly  onChange={(value)=>updateDate(item.id, value)}/></Descriptions.Item>
                 </Descriptions>
             </Card>
             </Space>

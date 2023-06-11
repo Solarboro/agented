@@ -471,7 +471,7 @@ function ProductDetail () {
     // upload
     const uploadProps = {
         name: 'file',
-        action: 'http://aruchi.top:1181/api/upload',
+        action: process.env.REACT_APP_BE_IMAGE_UPLOAD_API,
         headers: {
           authorization: 'Basic c29sYXI6NjY2NjY2',
         },

@@ -14,6 +14,11 @@ class ProductStore{
     product = {}
     products = []
     studio701Products = []
+    statistic701 = []
+    statistic701Period =[]
+    statistic701PeriodFilter = '';
+    statistic701Producer = []
+    statistic701ProducerFilter = '';
 
     paymentDetail = {}
     constructor(){
@@ -22,10 +27,32 @@ class ProductStore{
         userStore.isLogin && this.index()
     }
 
+    // 701 statistic 
+    get701Statistic =()=>{
+        http.get('/statistic/studio/701')
+        .then(res => {
+            this.statistic701 = [...res.data]
+            this.statistic701Period = [...new Set(this.statistic701.map(v=>v.period))]
+            this.statistic701Producer = [...new Set(this.statistic701.map(v=>v.producer))]
+
+            this.statistic701PeriodFilter = this.statistic701PeriodFilter || this.statistic701Period.at(-1);
+            this.statistic701ProducerFilter = this.statistic701ProducerFilter || this.statistic701Producer.at(-1);
+
+
+            
+            console.log(this.statistic701Period)
+            console.log(this.statistic701Producer)
+        }
+        )
+        .catch(console.log);
+    }
     //
     get701Products = () => {
         http.get('product/701')
-        .then( res => this.studio701Products = [...res.data])
+        .then( res => {
+            this.studio701Products = [...res.data]
+            
+        })
         .catch(console.log);
     }
 
