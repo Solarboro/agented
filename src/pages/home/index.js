@@ -57,7 +57,11 @@ function HomeEntity () {
         
 
             <Button icon={<CaretRightOutlined />} type='primary' size='middle' onClick={toHome} style={{width: '50%'}}>开 始</Button>
-            <Button icon={<BarChartOutlined />} type='primary' size='middle' onClick={toStatistic} style={{width: '50%'}}>统 计</Button>
+
+            {
+              userStore.isAgent&&
+              <Button icon={<BarChartOutlined />} type='primary' size='middle' onClick={toStatistic} style={{width: '50%'}}>统 计</Button>
+            }
         </div>
     )
 }
