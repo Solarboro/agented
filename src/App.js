@@ -12,6 +12,9 @@ import { ConfigProvider } from 'antd';
 import {App} from 'antd';
 import AgentRoute from './comp/agent';
 import AgentHome from './pages/agent';
+import Pending from './pages/yun/pending';
+import SubStandardStore from './pages/yun/subStandardStore';
+import Yun from './pages/yun';
 const Studiodetail = lazy(()=>import('./pages/studiodetail'));
 const PersonalInfo = lazy(()=>import('./pages/personalInfo'));
 const PaymentInfo = lazy(()=>import('./pages/paymentInfo'));
@@ -22,6 +25,9 @@ const About = lazy(()=>import('./pages/about'));
 const ProductSummary = lazy(()=>import('./pages/product/summary'));
 const ProductDetail = lazy(()=>import('./pages/product/detail'));
 const PaymentSummary = lazy(()=>import('./pages/payment'));
+
+// YUn
+const YunProviderPanel = lazy(()=>import('./pages/yun/provider'));
 
 const getActive = ({isActive})=>{
   return isActive ? 'activeDemo': '';
@@ -63,6 +69,13 @@ function MyApp() {
                 <Route path='about' element={<AgentRoute> <About /></AgentRoute>} />
                 <Route path='product' element={<AgentRoute> <ProductSummary /></AgentRoute>} />
                 <Route path='product/detail/:productStatus' element={<AgentRoute> <ProductDetail /></AgentRoute>} />
+
+
+                <Route path='/yun' element={<Yun />}></Route>
+                <Route path='/yunProvider' element={<YunProviderPanel />}></Route>
+                <Route path='/yunPending' element={<Pending />}></Route>
+                <Route path='/yunSubStore' element={<SubStandardStore />}></Route>
+                
               </Route>
 
               <Route path='/payment' element={<PaymentSummary />}></Route>

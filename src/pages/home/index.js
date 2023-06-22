@@ -12,6 +12,7 @@ function HomeEntity () {
 
     const toHome = ()=>{
 
+      console.log(userStore.isYun)
 
       switch (true) {
         case userStore.isAgent :
@@ -19,6 +20,10 @@ function HomeEntity () {
           break;
         case userStore.isStudio :
           nav('/studio');
+          break;
+        case userStore.isYun:
+
+          nav('/yun');
           break;
         default:
           message.info('请登录!').then(()=>nav("/"))

@@ -5,7 +5,6 @@ import { userStore } from "../store/userStore"
 
 const AgentRoute =  ({children})=>{
 
-    !userStore?.isAgent && alert('login please')
     return userStore?.isAgent ? <>{children}</> : <Navigate to="/" />
 }
 

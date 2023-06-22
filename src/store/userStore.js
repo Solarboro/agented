@@ -53,6 +53,9 @@ class UserStore {
     get isStudio(){
         return this.user?.authoritiesList?.filter(v=> v.role === 'STUDIO').length > 0 ? true : false;
     }
+    get isYun(){
+        return this.user?.authoritiesList?.filter(v=> v.role === 'YUN').length > 0 ? true : false;
+    }
 }
 
 export const userStore = new UserStore()

@@ -6,6 +6,7 @@ import { userStore } from "../../store/userStore";
 import useLogin from "../../comp/login";
 import useAPIKey from "../../hooks/useAPIKey";
 import { App, Dropdown } from "antd";
+import useUpdatePass from "../../comp/updatePass";
 
 
 function AgentHome(){
@@ -24,6 +25,12 @@ function AgentHome(){
     const loginTo = (values, callbk) => {
 
         userStore.login(values, accessToken =>{ setValue(accessToken); callbk();}, message)
+    }
+
+    // update passs
+    const updatePass = useUpdatePass({title: '更新密码'});
+    const updatePassf = (values, callbk) => {
+      userStore.updateUser(values);
     }
 
     // dropdown
@@ -77,6 +84,7 @@ function AgentHome(){
           case '12':
             // form.resetFields();
             // setPassModal(true);
+            updatePass({id: userStore.user.id}, updatePassf)
             break;
           case '31':
             navt("/payinfo");

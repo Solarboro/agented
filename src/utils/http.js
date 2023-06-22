@@ -60,7 +60,10 @@ http.interceptors.response.use(
                     break;
             
                 default:
-                    message.error(error?.response?.data?.message)
+                    if(error?.response )
+                        message.error(error?.response?.data?.message)
+
+                    message.error(`请检查网络连接 / 联系管理员 ${error.message}`)
                     break;
             }
         }

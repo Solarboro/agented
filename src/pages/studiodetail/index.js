@@ -1,6 +1,6 @@
 import { productStore } from "../../store/productStore"
 import { observer } from "mobx-react-lite";
-import { Card, DatePicker, Descriptions, Divider, Image, Input, InputNumber, List, Radio, Space } from "antd";
+import { Button, Card, DatePicker, Descriptions, Divider, Image, Input, InputNumber, List, Radio, Space } from "antd";
 import { useEffect, useState } from "react";
 import dayjs from 'dayjs';
 
@@ -97,6 +97,15 @@ function StudioPanel(){
 
         <>
         <br />
+        <Button block>dfsdfsf</Button>
+        <Space >
+        <Button block>dfsdfsf</Button>
+        <Button>df</Button>
+        <Button>df</Button>
+        <Button>df</Button>
+        <Button>df</Button>
+        </Space>
+
         <Space direction='vertical' style={{display: 'flex', alignItems: 'center'}}>
             <Card>
             <Radio.Group  
