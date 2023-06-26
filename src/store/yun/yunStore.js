@@ -4,7 +4,6 @@ import http from "../../utils/http";
 
 
 class YunStore {
-
     products = [];
 
     constructor(){
@@ -15,8 +14,18 @@ class YunStore {
     segmentValue = 'pending';
     setSegmentValue = value => this.segmentValue = value;
 
+
+    //
+    get cnt4SubStore(){
+        return this.products.filter(v=>v.status === 'subStore').length;
+    }
+
     //
     get filterProducts(){
+
+        if(this.segmentValue === 'pending')
+            return this.products.slice().sort((a,b)=> b.cdate - a.cdate);
+
 
         return this.products.filter(v=>v.status === this.segmentValue).sort((a,b)=> b.cdate - a.cdate);
 
@@ -36,9 +45,12 @@ class YunStore {
         .catch(console.log)
     }
 
-    newProducts = data => {
+    newProducts = (data, callback) => {
         http.post('yun/product', data)
-        .then(console.info)
+        .then(res=> {
+            this.products = [...this.products.concat(res.data)]
+            callback && callback();   
+        })
         .catch(console.log)
     }
 
@@ -68,11 +80,17 @@ class YunStore {
 
     delProduct = id => {
         http.delete(`yun/product/${id}`)
-        .then(console.info)
+        .then(res => this.products = [...this.products.filter(v => v.id !== id)])
         .catch(console.log)
     }
 
     //
+    toPending = id => {
+        http.get(`yun/product/${id}/toPending`)
+        .then(res => this.products = [...this.products.filter(v => v.id !== id), res.data])
+        .catch(console.log)
+    }
+    
     toStore = id => {
         http.get(`yun/product/${id}/toStore`)
         .then(console.info)
@@ -81,12 +99,12 @@ class YunStore {
     
     toSubStore = id => {
         http.get(`yun/product/${id}/toSubStore`)
-        .then(console.info)
+        .then(res => this.products = [...this.products.filter(v => v.id !== id), res.data])
         .catch(console.log)
     }
     
-    toFactory = id => {
-        http.get(`yun/product/${id}/toFactory`)
+    toFactory = ids => {
+        http.post(`yun/product/0/toFactory`, ids)
         .then(console.info)
         .catch(console.log)
     }

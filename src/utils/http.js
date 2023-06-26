@@ -62,8 +62,8 @@ http.interceptors.response.use(
                 default:
                     if(error?.response )
                         message.error(error?.response?.data?.message)
-
-                    message.error(`请检查网络连接 / 联系管理员 ${error.message}`)
+                    else
+                        message.error(`请检查网络连接 ${error.message}`)
                     break;
             }
         }

@@ -1,5 +1,6 @@
 import { PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { App, AutoComplete, Button, Col, DatePicker, Divider, Form, Input, InputNumber, Row, Select, Space, Switch } from "antd";
+import { useWatch } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
 import dayjs from 'dayjs'
 
@@ -7,6 +8,7 @@ export default function useProductPanel({title}){
 
     const {modal} = App.useApp();
     const [form] = Form.useForm();
+    const mobiler = useWatch(['yunBOrder',"mobile"], form)
     const content = (
         <Form
             labelCol={{span:24}}
@@ -50,7 +52,7 @@ export default function useProductPanel({title}){
                   <Form.Item  style={{display: 'inline-block', width:'100%'}}  name={['yunBOrder',"mobile"]}><AutoComplete placeholder='手机号' /></Form.Item>
                 </Col>
                 <Col span={2}>
-                    <PhoneOutlined onClick={()=>window.location.href='tel:13888888888'} />
+                    <PhoneOutlined onClick={()=>window.location.href=`tel:${mobiler}`} />
                 </Col>
                 <Col span={24}>
                   <Form.Item  style={{display: 'inline-block', width:'100%'}}  name={['yunBOrder',"address"]}><TextArea placeholder='地址' /></Form.Item>
@@ -69,7 +71,7 @@ export default function useProductPanel({title}){
         modal.confirm({
             icon: true,
             okText: '更新',
-            onOk: closeForm => {form.validateFields().then(values=>  onSubmit({...raw, ...values}, closeForm)).catch(console.info)},
+            onOk: closeForm => {form.validateFields().then(values=>  onSubmit({...raw, ...values, yunBOrder: {...raw.yunBOrder, ...values.yunBOrder}}, closeForm)).catch(console.info)},
             content
         });
     }

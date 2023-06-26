@@ -19,7 +19,7 @@ export default function useUpdatePass({title}){
           {title && <Divider>{title}</Divider>}
           
           <Form.Item
-            name='password'
+            name='newPassword'
             label="密码"
             hasFeedback
             rules={[
@@ -36,7 +36,7 @@ export default function useUpdatePass({title}){
             name='confirm'
             label='确认密码'
             hasFeedback
-            dependencies={['password']}
+            dependencies={['newPassword']}
             rules={[
               {
                 required: true,
@@ -44,7 +44,7 @@ export default function useUpdatePass({title}){
               },
               ({getFieldValue}) => ({
                 validator(_, value) {
-                  if(!value || getFieldValue('password') === value)
+                  if(!value || getFieldValue('newPassword') === value)
                     return Promise.resolve();
 
                   return Promise.reject(new Error('密码不匹配'))

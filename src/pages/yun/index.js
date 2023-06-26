@@ -1,5 +1,5 @@
-import { PlusCircleOutlined, UploadOutlined, FilterOutlined, DeleteOutlined, UndoOutlined,FileExcelOutlined, FileDoneOutlined,FileSyncOutlined } from '@ant-design/icons';
-import { Badge, Button, Card, DatePicker, Descriptions, Divider, Drawer, Segmented, Select, Space, Statistic, Switch, Table, Tag, Typography, Upload } from "antd";
+import { PlusCircleOutlined, UploadOutlined, FilterOutlined, DownloadOutlined,UnorderedListOutlined } from '@ant-design/icons';
+import { App, Badge, Button, Card, DatePicker, Descriptions, Divider, Drawer, Input, Popconfirm, Segmented, Select, Space, Statistic, Steps, Switch, Table, Tag, Typography, Upload } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { yunStore } from "../../store/yun/yunStore";
@@ -13,8 +13,10 @@ export default observer(
 
     ()=>{
 
-        const {segmentValue, setSegmentValue} = yunStore;
-        const {newProduct, updateProduct, filterProducts, allProducts} = yunStore;
+        // 
+        const {message}  = App.useApp();
+        const {segmentValue, setSegmentValue, cnt4SubStore} = yunStore;
+        const {newProduct, newProducts, updateProduct, delProduct, toSubStore,toPending,toFactory, filterProducts, allProducts} = yunStore;
         const [selectedRowKeys, setselectedRowKeys] = useState([]);
 
 
@@ -23,59 +25,115 @@ export default observer(
         //
         useEffect(()=> allProducts(),[]);
 
-        // excel parse
-        const onExcel = file => {
 
+        // day ago tag
+        const getDayAgo = timestamp =>{
 
-            // const {files} = file.target;
-
-            const fileReader = new FileReader();
-
-            fileReader.onload = event => {
-                try {
-                    const {result} = event.target;
-                    const workbok = read(result, {type:'binary'})
-                    let data = [];
-                    for (const sheet in workbok.Sheets) {
-                        console.log(sheet)
-                        if(workbok.Sheets.hasOwnProperty(sheet))
-                            data = data.concat(utils.sheet_to_json(workbok.Sheets[sheet]));
-                    }
-                    let obj = data[0];
-                    console.log(data[0].__rowNum__)
-                    console.log(data[0].ID)
-                    console.log(data[0]['名字'])
-                    console.log(data[0].备注)
-                    console.log(data[0].完成)
-                    console.log(data[0].款式)
-                    console.log(data[0].码数)
-                    console.log(data[0].订单号)
-                    console.log(data[0].退或换)
-                    console.log(data[0].颜色)
-                    console.log(data[0].__EMPTY)
-                
-                    console.log(data);
-
-                
-                } catch (error) {
-                    console.log(error)
-                }
+            let cnt = Math.abs(dayjs(timestamp).set('hour', 0).diff(undefined, 'day'))
+            switch (true) {
+                case cnt === 0:
+                    return `今天` 
+                case cnt === 1:
+                    return `昨天` 
+                case cnt < 3:
+                    return `${cnt} 天前` 
+                default:
+                    return dayjs(timestamp).format('YYYY.MM.DD')
             }
-
-            //
-            // fileReader.readAsBinaryString(files[0])
-            fileReader.readAsBinaryString(file.file)
         }
+
+
+        // excel parse with upload
+        const excel2Product = data => {
+            return ({
+                // "id": 37,
+                // "version": 0,
+                // "mdate": 1687570407397,
+                // "cdate": 1687570407397,
+                "import": data.录入,
+                "sku": data.款式,
+                "color": data.颜色,
+                "size": data.码数,
+                "count": 1,
+                "ls": null,
+                "switchOrNot": data.退或换 === "1退" ? false : true,
+                "comment": data.备注,
+                "yunBOrder": {
+                    // "id": 70,
+                    // "version": 0,
+                    // "mdate": 1687570407398,
+                    // "cdate": 1687570407398,
+                    "platform": "PDD",
+                    "orderNo": data.订单号,
+                    "switchOrNot": data.退或换 === "1退" ? false : true,
+                    "name": data.名字,
+                    "mobile": data.号码,
+                    "address": data.地址,
+                    // "key": 70
+                },
+                // "yunFOderId": null,
+                // "status": "pending",
+                // "lastStatus": null,
+                // "toStoreDate": null,
+                // "toSubStoreArea": null,
+                // "toSubStoreDate": null,
+                // "toFactoryDate": null,
+                // "pullOprt": "li, pengqiang",
+                // "key": 37
+            })
+        }
+        const props = {
+            showUploadList: false,
+            maxCount: 1,
+            beforeUpload: (file, files) => {
+                console.log(file);
+                console.log(files);
+                const fileReader = new FileReader();
+
+                fileReader.onload = event => {
+                    try {
+                        const {result} = event.target;
+                        const workbok = read(result, {type:'binary'})
+                        let data = [];
+                        for (const sheet in workbok.Sheets) {
+                            console.log(sheet)
+                            if(workbok.Sheets.hasOwnProperty(sheet))
+                                data = data.concat(utils.sheet_to_json(workbok.Sheets[sheet]));
+                        }                    
+                        console.log(data);
+
+                        //
+                        newProducts(
+                            data.map(excel2Product).filter(v => v.import === '是'), 
+                            ()=> message.info("批上传成功", 1.5)
+                        )
+
+                    
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+
+                //
+                // fileReader.readAsBinaryString(files[0])
+                fileReader.readAsBinaryString(file)
+            }
+        }
+    
 
         // product new one
         const productNew = () =>{
-            newProduct({})
+            newProduct({yunBOrder:{orderNo: '0000', platform: null, switchOrNot: null, name: null, mobile:null, address: null}})
         }
         // product update
         const productPanel = useProductPanel({title:'客件详情'})
         const submitDetail = (data, callback) =>{
             updateProduct(data, callback);
         }   
+        // product delete one
+        const productDel = id => {
+            delProduct(id);
+        }
         const onClickProductRow = record =>{
 
             return({
@@ -84,6 +142,171 @@ export default observer(
             }) 
         }
 
+        //
+        const getSteps = cnt => <Steps
+                                    type="inline"
+                                    direction='vertical'
+                                    current={cnt}
+                                    progressDot
+                                    items={[
+                                        {
+                                            title: '录入',
+                                            // description: 'This is a Step 1.',
+                                        },
+                                        {
+                                            title: '次品',
+                                            // description: 'This is a Step 2.',
+                                        },
+                                        {
+                                            title: '返厂',
+                                            // description: 'This is a Step 3.',
+                                        },
+                                    ]}
+                                />
+        // get segment extra
+        const segmentExtra = record => {
+
+
+            const svPending = 
+            <>
+             {getSteps(0)}
+            <Space.Compact>
+                <Tag>{getDayAgo(record.cdate)}</Tag>
+                <Tag color="success"> {record.pullOprt ? record.pullOprt : '-' } </Tag>
+            </Space.Compact>
+            <Space.Compact>
+
+    
+                <Popconfirm
+                    title="记录移除"
+                    description="是否移除该记录 ?"
+                    onConfirm={()=>delProduct(record.id)}
+                    
+                    >
+                    <Button danger type='link'>删除</Button>
+                </Popconfirm>
+        
+                <Popconfirm
+                    title="次品库存"
+                    description="是否置入 次品库存 ?"
+                    onConfirm={()=>toSubStore(record.id)}
+                    
+                    >
+                    <Button type='link'>入库</Button>
+                </Popconfirm>
+            </Space.Compact>
+            </>
+
+            const svSubStore = 
+            <>
+            {getSteps(1)}
+            <Space.Compact>
+                <Tag>{getDayAgo(record.toSubStoreDate)}</Tag>
+                <Tag color="success"> {record.toSubStoreOprt ? record.toSubStoreOprt : '-' } </Tag>
+            </Space.Compact>
+            <Space.Compact>
+    
+                <Button type='text'>库架: {record.toSubStoreArea ? record.toSubStoreArea : '-'}</Button>
+            
+                <Popconfirm
+                    title="次品库存"
+                    description="是否由 次品库存 撤出 ?"
+                    onConfirm={()=>toPending(record.id)}
+             
+                >
+                    <Button type='link'>撤出</Button>
+                </Popconfirm>
+            </Space.Compact>
+            </>
+
+            const svFactory = 
+            <>
+
+           {getSteps(2)}
+            
+            <Space.Compact>
+                <Tag>{getDayAgo(record.toSubStoreDate)}</Tag>
+                <Tag color="success"> {record.toSubStoreOprt ? record.toSubStoreOprt : '-' } </Tag>
+            </Space.Compact>
+            
+            <Space.Compact>
+                <Popconfirm
+                    title="记录移除"
+                    description="是否移除该记录 ?"
+                    onConfirm={()=>delProduct(record.id)}
+                    
+                    >
+                    <Button danger type='link'>删除</Button>
+                </Popconfirm>
+
+                <Popconfirm
+                    title="次品库存"
+                    description="是否置入 次品库存 ?"
+                    onConfirm={()=>toSubStore(record.id)}
+                    
+                    >
+                    <Button type='link'>入库</Button>
+                </Popconfirm>
+            </Space.Compact>
+            </>
+
+            switch(record.status){
+
+                case 'pending':
+                    return svPending;
+                case 'subStore':
+                    return svSubStore;
+
+                case 'toFactory':
+                    return svFactory;
+                default :
+                    return <></>
+            }
+        }
+
+        // table title
+        const colExtraTitle = ()=> {
+
+
+            const pendingT = 
+            
+                    <Space.Compact>
+                        <Upload {...props}>
+                            <Button icon={<DownloadOutlined />}>批</Button>
+                        </Upload>
+                        
+                        <Button onClick={productNew} icon={<PlusCircleOutlined style={{color: '#006564'}} />}>单</Button>
+                    </Space.Compact>
+           
+            const subStoreT = 
+           
+                    <Space.Compact>
+                        
+                        <Popconfirm
+                            title="返厂清单"
+                            description={`是否返厂所选记录 (${selectedRowKeys.length}) ?`}
+                            onConfirm={()=>toFactory(selectedRowKeys)}
+                            >
+                            <Button disabled={!(selectedRowKeys.length > 0) } icon={<UploadOutlined />}>返</Button>
+                        </Popconfirm>
+
+                        <Button  icon={<UnorderedListOutlined style={{color: '#006564'}} />}>列</Button>
+                    </Space.Compact>
+                   
+
+            switch (segmentValue) {
+                case 'pending':
+                    
+                    return pendingT;
+            
+                case 'subStore':
+                    return subStoreT;
+                default:
+                    return <></>
+            }
+           
+        }
+        // table
         const col = [
           {
             title: <Space.Compact>
@@ -104,9 +327,8 @@ export default observer(
                  
                     <Space.Compact>
                         
-                        {record.yunBOrder.orderNo && <Tag > {record.yunBOrder.orderNo} </Tag>}
                         {record.yunBOrder.platform && <Tag> {record.yunBOrder.platform} </Tag>}
-                        {record.switch && <Tag> {record.platformId} </Tag>}
+                        {record.yunBOrder.orderNo && <Tag > {record.yunBOrder.orderNo} </Tag>}
 
                     </Space.Compact>
                     
@@ -130,38 +352,32 @@ export default observer(
             
           },
           {
-            title: <Space.Compact>
-                        <Button onClick={productNew} icon={<UploadOutlined style={{color: '#006564'}} />}>批</Button>
-                        <Button onClick={productNew} icon={<PlusCircleOutlined style={{color: '#006564'}} />}>单</Button>
-                    </Space.Compact>,
+            title: colExtraTitle(),
             // width:'70px',
             render: (_, record) => 
                 <Space direction="vertical" style={{display: 'flex'}}>
                    
-                    <Tag color="success"> {record.pullOprt ? record.pullOprt : '-' } </Tag>
-                    <Space>
-                        <Tag>{dayjs(record.cdate).format('MM.DD')}</Tag>
-                        {/* <Switch checkedChildren='完' unCheckedChildren="进"/> */}
-                    </Space>
-                    {/* <Space.Compact size='middle'>
-                        <Button icon={<FileSyncOutlined style={{color: 'blue'}} />} />
-                        <Button icon={<FileExcelOutlined style={{color: 'red'}} />} />
-                        <Button  icon={<DeleteOutlined  style={{color: 'red'}}/>} />
-                    </Space.Compact> */}
+                    
+
+                    {segmentExtra(record)}
     
                 </Space>
-          },
-        //   {
-        //     title: 'firstname',
-        //     dataIndex: 'firstname'
-        //   },
-        //   {
-        //     title: 'age',
-        //     dataIndex: 'age'
-        //   }
+          }
         ];
 
 
+
+        // row selection 
+        const getRowOption = ()=> {
+
+            if(segmentValue === 'subStore')
+                return ({rowSelection:
+                    {
+                        selectedRowKeys,
+                        onChange: setselectedRowKeys
+                    }})
+            return ({})
+        }
     
      
 
@@ -191,7 +407,7 @@ export default observer(
                                 value: 'subStore',
                                 label: <Statistic
                                 title="次品库存"
-                                value={5800}
+                                value={cnt4SubStore}
                                 valueStyle={{ color: '#3f8600' }}
                               />
                             }
@@ -204,12 +420,7 @@ export default observer(
 
                 <Table 
                     onRow={onClickProductRow}
-                    // rowSelection={
-                    //     {
-                    //         selectedRowKeys,
-                    //         onChange: setselectedRowKeys
-                    //     }
-                    // }
+                    {...getRowOption()}
                     pagination={{pageSize:4, simple:true, position: 'bottom', algin: 'end' }}
                     style={{minHeight: '384px'}}
                     columns={col}
@@ -226,10 +437,22 @@ export default observer(
                     open={drawerSwitch}
                     // key={placement}
                 >
-                   <Descriptions column={4}>
+                   <Descriptions column={3}>
 
-                        <Descriptions.Item label='abd'>
-                            <Typography.Text>abd</Typography.Text>
+                        <Descriptions.Item label='款式'>
+                            <Typography.Text>款式</Typography.Text>
+                        </Descriptions.Item>
+
+                        <Descriptions.Item label='颜色'>
+                            <Typography.Text>颜色</Typography.Text>
+                        </Descriptions.Item>
+
+                        <Descriptions.Item label='码数'>
+                            <Typography.Text>码数</Typography.Text>
+                        </Descriptions.Item>
+
+                        <Descriptions.Item label='数量'>
+                            <Typography.Text>数量</Typography.Text>
                         </Descriptions.Item>
 
                         
