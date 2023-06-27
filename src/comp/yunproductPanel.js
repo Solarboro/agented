@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 
 export default function useProductPanel({title}){
 
+    const areas = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
     const {modal} = App.useApp();
     const [form] = Form.useForm();
     const mobiler = useWatch(['yunBOrder',"mobile"], form)
@@ -30,7 +31,7 @@ export default function useProductPanel({title}){
           <Space>
           <Form.Item  name="ls" valuePropName="checked"><Switch checkedChildren="长" unCheckedChildren="短"  /></Form.Item>
           <Form.Item  name='switchOrNot' valuePropName="checked"><Switch checkedChildren="换件" unCheckedChildren="退件"  /></Form.Item>
-          <Form.Item name="toSubStoreArea"><Select  placeholder="位置"  options={[{label:"A",value:"A"}]}/></Form.Item>
+          <Form.Item name="toSubStoreArea"><Select  placeholder="位置"  options={areas.map(value=>({label:value, value}))}/></Form.Item>
           </Space>
           </Form.Item>
           

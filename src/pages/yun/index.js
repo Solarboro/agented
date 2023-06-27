@@ -143,7 +143,7 @@ export default observer(
         }
 
         //
-        const getSteps = cnt => <Steps
+        const getSteps = (cnt,record) => <Steps
                                     type="inline"
                                     direction='vertical'
                                     current={cnt}
@@ -151,15 +151,27 @@ export default observer(
                                     items={[
                                         {
                                             title: '录入',
-                                            // description: 'This is a Step 1.',
+                                            description: record.cdate ? <Space>
+                                                        {getDayAgo(record.cdate)}
+                                                        -
+                                                        {record.pullOprt ? record.pullOprt : '-' } 
+                                                        </Space>: undefined,
                                         },
                                         {
                                             title: '次品',
-                                            // description: 'This is a Step 2.',
+                                            description: record.toSubStoreDate ? <Space>
+                                            {getDayAgo(record.toSubStoreDate)}
+                                            -
+                                            {record.toSubStoreOprt ? record.toSubStoreOprt : '-' } 
+                                            </Space>: undefined,
                                         },
                                         {
                                             title: '返厂',
-                                            // description: 'This is a Step 3.',
+                                            description: record.toFactoryDate ? <Space>
+                                            {getDayAgo(record.toFactoryDate)}
+                                            -
+                                            {record.toFactoryOprt ? record.toFactoryOprt : '-' } 
+                                            </Space>: undefined,
                                         },
                                     ]}
                                 />
@@ -169,11 +181,9 @@ export default observer(
 
             const svPending = 
             <>
-             {getSteps(0)}
-            <Space.Compact>
-                <Tag>{getDayAgo(record.cdate)}</Tag>
-                <Tag color="success"> {record.pullOprt ? record.pullOprt : '-' } </Tag>
-            </Space.Compact>
+             {getSteps(0, record)}
+
+    
             <Space.Compact>
 
     
@@ -199,11 +209,8 @@ export default observer(
 
             const svSubStore = 
             <>
-            {getSteps(1)}
-            <Space.Compact>
-                <Tag>{getDayAgo(record.toSubStoreDate)}</Tag>
-                <Tag color="success"> {record.toSubStoreOprt ? record.toSubStoreOprt : '-' } </Tag>
-            </Space.Compact>
+            {getSteps(1, record)}
+    
             <Space.Compact>
     
                 <Button type='text'>库架: {record.toSubStoreArea ? record.toSubStoreArea : '-'}</Button>
@@ -222,12 +229,9 @@ export default observer(
             const svFactory = 
             <>
 
-           {getSteps(2)}
+           {getSteps(2, record)}
             
-            <Space.Compact>
-                <Tag>{getDayAgo(record.toSubStoreDate)}</Tag>
-                <Tag color="success"> {record.toSubStoreOprt ? record.toSubStoreOprt : '-' } </Tag>
-            </Space.Compact>
+    
             
             <Space.Compact>
                 <Popconfirm
