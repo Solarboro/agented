@@ -29,8 +29,8 @@ function AgentHome(){
 
     // update passs
     const updatePass = useUpdatePass({title: '更新密码'});
-    const updatePassf = (values, callbk) => {
-      userStore.updateUser(values, ()=> message.info("更新成功", 1.5).then(callbk));
+    const updatePassf = values => {
+       return new Promise(r => r(userStore.updateUser(values)));
     }
 
     // dropdown

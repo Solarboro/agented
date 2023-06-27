@@ -31,18 +31,15 @@ class UserStore {
         })
     }
 
-    updateUser = (properties, callback)=>{
-        http.put('user', properties)
+    updateUser = (properties)=>{
+        return http.put('user', properties)
         .then(
             res=>{
                 this.user = {...res.data};
                 localStorage.setItem('user', JSON.stringify(this.user));
-
-                //
-                callback && callback();
             }
         )
-        .catch(console.log)
+   
     }
 
     get isLogin (){

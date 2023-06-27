@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 export default function useUpdatePass({title}){
 
-    const {modal} = App.useApp();
+    const {message, modal} = App.useApp();
     const [form] = Form.useForm();
     const content = (
         <Form
@@ -64,7 +64,7 @@ export default function useUpdatePass({title}){
         modal.confirm({
             icon: true,
             okText: '更新',
-            onOk: closeForm => {form.validateFields().then(values=>onSubmit({...raw, ...values}, closeForm)).catch(console.info)},
+            onOk: closeForm => {form.validateFields().then(values=>onSubmit({...raw, ...values}).then(()=> message.info("更新成功", 1.5).then(closeForm))).catch(console.info)},
             content
         });
     }
