@@ -178,7 +178,10 @@ class YunStore {
     
     toFactory = ids => {
         return http.post(`yun/product/0/toFactory`, ids)
-        .then(res=> this.products = [...this.products.filter(v=> !res.data.yunProducts.map(v=>v.id).includes(v.id))])
+        .then(res=> {
+            this.products = [...this.products.filter(v=> !res.data.yunProducts.map(v=>v.id).includes(v.id)), ...res.data.yunProducts]
+            
+        })
     
     }
     

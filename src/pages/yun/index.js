@@ -1,5 +1,5 @@
 import { PlusCircleOutlined, UploadOutlined, FilterOutlined, DownloadOutlined,UnorderedListOutlined, ReloadOutlined, RollbackOutlined} from '@ant-design/icons';
-import { App,  AutoComplete,  Button,  Card,  Col,  Collapse,  DatePicker,  Descriptions, Drawer, FloatButton, Form, Input, InputNumber, List, Popconfirm, Row, Segmented,  Select,  Space, Statistic, Steps,  Switch,  Table, Tag, Typography, Upload, Watermark } from "antd";
+import { App,  AutoComplete,  Button,  Card,  Col,  Collapse,  DatePicker,  Descriptions, Drawer, FloatButton, Form, Image, Input, InputNumber, List, Popconfirm, Row, Segmented,  Select,  Space, Statistic, Steps,  Switch,  Table, Tag, Typography, Upload, Watermark } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import { yunStore } from "../../store/yun/yunStore";
@@ -10,13 +10,13 @@ import './index.scss';
 import { findDOMNode } from 'react-dom';
 import { useForm } from 'antd/es/form/Form';
 import CheckableTag from 'antd/es/tag/CheckableTag';
-
+import bg from '../../bg.jpg'
 export default observer(
 
     ()=>{
 
         // 
-        const {message}  = App.useApp();
+        const {message, modal}  = App.useApp();
         const {segmentValue, setSegmentValue, cnt4SubStore, fOrders} = yunStore;
         const {setFilterProduct,filterProduct,filterToday,filterInprogress,filterDone,setfilterToday,setfilterInprogress,setfilterDone} = yunStore;
         const {newProduct, newProducts, updateProduct, delProduct, toSubStore,toPending,toFactory, filterProducts, allProducts} = yunStore;
@@ -267,29 +267,36 @@ export default observer(
 
             const pendingT = 
             
-                    <Space.Compact>
+                    <Space>
                         <Upload {...props}>
                             <Button icon={<DownloadOutlined />}>批量导入</Button>
                         </Upload>
-                        
+
+                        <Button onClick={ ()=>
+                            modal.info({
+                                icon: true,
+                                content: <Image src={bg}  />
+                            })
+
+                        }>概要</Button>
                         {/* <Button onClick={productNew} icon={<PlusCircleOutlined style={{color: '#006564'}} />}>单</Button> */}
-                    </Space.Compact>
+                    </Space>
            
             const subStoreT = 
            
-                    <Space.Compact>
+                    <Space>
                         
                         <Popconfirm
                             disabled={!(selectedRowKeys.length > 0) }
                             title="返厂清单"
                             description={`是否返厂所选记录 (${selectedRowKeys.length}) ?`}
-                            onConfirm={()=>toFactory(selectedRowKeys).then(()=>setselectedRowKeys([]).catch(console.log))}
+                            onConfirm={()=>toFactory(selectedRowKeys).then(()=>setselectedRowKeys([])).catch(console.log)}
                             >
                             <Button disabled={!(selectedRowKeys.length > 0) } icon={<UploadOutlined />}>返厂</Button>
                         </Popconfirm>
 
                         <Button onClick={()=>setdrawerSwitchFactory(true)} icon={<UnorderedListOutlined style={{color: '#006564'}} />}>清单</Button>
-                    </Space.Compact>
+                    </Space>
                    
 
             switch (segmentValue) {
@@ -427,7 +434,7 @@ export default observer(
                         key: v.key,
                         label: getCollapseItemsLabel(v),
                         children: <>
-                        备注: <Typography.Text type="secondary"  editable={{onChange: comment=> updateFOrder({...v, comment})}} >{v.comment}</Typography.Text>
+                        备注: <Typography.Text type="secondary"  copyable editable={{onChange: comment=> updateFOrder({...v, comment})}} >{v.comment}</Typography.Text>
                             <List 
                                 size='small'
                                 dataSource={v.yunProducts}
@@ -571,16 +578,16 @@ export default observer(
                     
                     <Space>
                         <Form.Item  name="pullOprt"><Input placeholder="录入人员" /></Form.Item>
-                        <Form.Item  name="cdate"><DatePicker placeholder='录入日期' /></Form.Item>
+                        <Form.Item  name="cdate"><DatePicker inputReadOnly placeholder='录入日期' /></Form.Item>
                     </Space>
                     <Space>
                         <Form.Item  name="toSubStoreOprt"><Input placeholder="入库人员" /></Form.Item>
                         <Form.Item name="toSubStoreArea"><Select  placeholder="位置"  options={areas.map(value=>({label:value, value}))}/></Form.Item>
-                        <Form.Item name="toSubStoreDate"><DatePicker placeholder='入库日期' /></Form.Item>
+                        <Form.Item name="toSubStoreDate"><DatePicker inputReadOnly placeholder='入库日期' /></Form.Item>
                     </Space>
                     <Space>
                         <Form.Item  name="toFactoryOprt"><Input placeholder="返厂人员" /></Form.Item>
-                        <Form.Item  name="toFactoryDate"><DatePicker placeholder='返厂日期' /></Form.Item>
+                        <Form.Item  name="toFactoryDate"><DatePicker inputReadOnly placeholder='返厂日期' /></Form.Item>
                     </Space>
 
                     </Form.Item>
@@ -619,7 +626,6 @@ export default observer(
                 </Drawer>
 
                 <Drawer
-                    closeIcon
                     title="返厂记录"
                     placement='bottom'
                     
