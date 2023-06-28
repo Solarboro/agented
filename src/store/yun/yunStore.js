@@ -12,9 +12,12 @@ class YunStore {
     filterToday = false;
     filterInprogress = false;
     filterDone = false;
-
+    ssSku = ''
     //
     fOrders = [];
+
+    //
+    subStoreSummary=[];
 
     //
     constructor(){
@@ -30,6 +33,7 @@ class YunStore {
     setfilterToday = value => this.filterToday = value
     setfilterInprogress = value => this.filterInprogress = value
     setfilterDone = value => this.filterDone = value
+    setssSku = value => this.ssSku = value
     //
     get cnt4SubStore(){
         let cnt = 0;
@@ -72,7 +76,7 @@ class YunStore {
             return false
         if(filterProduct.toSubStoreOprt && filterProduct.toSubStoreOprt.trim().toUpperCase()  !== item.toSubStoreOprt.trim().toUpperCase() )
             return false
-        if(filterProduct.toSubStoreArea && filterProduct.toSubStoreArea.trim().toUpperCase()  !== item.toSubStoreArea.trim().toUpperCase() )
+        if(filterProduct?.toSubStoreArea && filterProduct?.toSubStoreArea?.trim()?.toUpperCase()  !== item?.toSubStoreArea?.trim().toUpperCase() )
             return false
         if(filterProduct.toFactoryOprt && filterProduct.toFactoryOprt.trim().toUpperCase()  !== item.toFactoryOprt.trim().toUpperCase() )
             return false
@@ -208,6 +212,11 @@ class YunStore {
         http.get("yun/factory")
         .then(res=> this.fOrders = [...res.data].sort((a,b)=> b.cdate-a.cdate))
         .catch(console.log)
+    }
+
+    getAllYunSummary = () => {
+        return http.get("yun/summary")
+        .then(res => this.subStoreSummary = [...res.data])
     }
 }
 

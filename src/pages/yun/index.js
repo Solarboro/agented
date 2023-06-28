@@ -1,5 +1,5 @@
 import { PlusCircleOutlined, UploadOutlined, FilterOutlined, InfoCircleOutlined, BarChartOutlined, DownloadOutlined,UnorderedListOutlined, ReloadOutlined, RollbackOutlined} from '@ant-design/icons';
-import { App,  AutoComplete,  Button,  Card,  Col,  Collapse,  DatePicker,  Descriptions, Drawer, FloatButton, Form, Image, Input, InputNumber, List, Popconfirm, Row, Segmented,  Select,  Space, Statistic, Steps,  Switch,  Table, Tag, Typography, Upload, Watermark } from "antd";
+import { App,  AutoComplete,  Button,  Card,  Col,  Collapse,  DatePicker,  Descriptions, Drawer, FloatButton, Form, Image, Input, InputNumber, List, Popconfirm, Row, Segmented,  Select,  Space, Statistic, Steps,  Switch,  Table, Tabs, Tag, Typography, Upload, Watermark } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import { yunStore } from "../../store/yun/yunStore";
@@ -17,11 +17,11 @@ export default observer(
 
         // 
         const {message, modal}  = App.useApp();
-        const {segmentValue, setSegmentValue, cnt4SubStore, fOrders} = yunStore;
+        const {segmentValue, setSegmentValue, cnt4SubStore, fOrders, subStoreSummary} = yunStore;
         const {setFilterProduct,filterProduct,filterToday,filterInprogress,filterDone,setfilterToday,setfilterInprogress,setfilterDone} = yunStore;
         const {newProduct, newProducts, updateProduct, delProduct, toSubStore,toPending,toFactory, filterProducts, allProducts} = yunStore;
 
-        const {retrieveAllFOrder, updateFOrder, rollbackFromFactory} = yunStore;
+        const {retrieveAllFOrder, updateFOrder, rollbackFromFactory, getAllYunSummary} = yunStore;
         const [selectedRowKeys, setselectedRowKeys] = useState([]);
 
 
@@ -51,6 +51,259 @@ export default observer(
                 default:
                     return dayjs(timestamp).format('YYYY.MM.DD')
             }
+        }
+
+
+      
+        // subStore Summary
+        const {ssSku, setssSku} = yunStore;
+        const [ssSkuDrawer, setssSkuDrawer] = useState(false)
+
+        const getssCount = list =>{
+            let cnt = 0;
+            list.forEach(element => {
+                cnt += element.count
+            });
+            return cnt;
+        }
+        const ssByColor = (sku, products) =>{
+            let list = products.filter(v=>v.sku === sku);
+
+            let colors = [...new Set( list.map(v=> v.color))]
+            let sizes = [...new Set( list.map(v=> v.size))]
+            let areas = [...new Set( list.map(v=> v.area))]
+            
+
+            let colorItems = colors.map(
+                color => ({
+                    color,
+                    count: getssCount(list.filter(v=>v.color === color))
+                })
+            )
+            let sizeItems = sizes.map(
+                size => ({
+                    size,
+                    count: getssCount(list.filter(v=>v.size === size))
+                })
+            )
+            let areaIteams = areas.map(
+                area => ({
+                    area,
+                    count: getssCount(list.filter(v=>v.area === area))
+                })
+            )
+            
+            return ({colorItems, sizeItems, areaIteams})
+
+        }
+
+        const sssTabItems = ({subStoreSummary, sku,sizeItems,colorItems,areaIteams}) =>{
+
+            return [
+                {
+                  key: '1',
+                  label: `总览`,
+                  children: <Table 
+
+                            pagination={{pageSize: 10, position:['bottomCenter']}}
+                        
+                            columns={[
+                                {
+                                    title: '款式',
+                                    dataIndex: 'sku',
+                                    key:'sku'
+                                },
+                                {
+                                    title: '尺码',
+                                    dataIndex: 'size',
+                                    key:'size'
+                                },
+                                {
+                                    title: '颜色',
+                                    dataIndex: 'color',
+                                    key:'color'
+                                },
+                                {
+                                    title: '库架',
+                                    dataIndex: 'area',
+                                    key:'area'
+                                },
+                                {
+                                    title: '数量',
+                                    dataIndex: 'count',
+                                    key:'count'
+                                },
+                            ]}
+                            dataSource={subStoreSummary.filter(v=>v.sku === sku)}
+                            summary={(pageData) => {
+                                let cnt = 0;
+                                pageData.forEach(({ count}) => {
+                                    cnt += count;
+                                });
+
+
+                                return (
+                                    <>
+                                    <Table.Summary.Row>
+                                      <Table.Summary.Cell ></Table.Summary.Cell>
+                                      <Table.Summary.Cell ></Table.Summary.Cell>
+                                      <Table.Summary.Cell ></Table.Summary.Cell>
+                                      <Table.Summary.Cell ></Table.Summary.Cell>
+                                      <Table.Summary.Cell >{cnt}</Table.Summary.Cell>
+                                   
+                                    </Table.Summary.Row>
+                                  </>
+                                )
+                                }
+                            }
+                        />,
+                },
+                {
+                  key: '2',
+                  label: `按尺码`,
+                  children: <Card
+                            title="按尺码"
+                            
+                        >
+                            <List 
+                                dataSource={sizeItems}
+                                renderItem={
+                                    (item, index) => 
+                                    <List.Item>
+                                        
+                                        {item.size} {item.count}
+                        
+                                    </List.Item>
+                                }
+                            />
+                        </Card>,
+                },
+                {
+                  key: '3',
+                  label: `按颜色`,
+                  children: <Card
+                            title="按颜色">
+                            <List 
+                                dataSource={colorItems}
+                                renderItem={
+                                    (item, index) => 
+                                    <List.Item>{item.color} {item.count}
+                                    </List.Item>
+                                }
+                            />
+                        </Card>
+
+                            ,
+                },
+                {
+                  key: '4',
+                  label: `按库位`,
+                  children: <Card
+                            title="按库架">
+                            <List 
+                                dataSource={areaIteams}
+                                renderItem={
+                                    (item, index) => 
+                                    <List.Item>{item.area} {item.count}
+                                    </List.Item>
+                                }
+                            />
+                        </Card>,
+                },
+              ];
+        }
+        const getSSSContent = () => {
+            
+            let sku = [...new Set(subStoreSummary.map(v=>v.sku))].map(value=>({label:value, value}));
+            
+            const {colorItems, sizeItems, areaIteams} = ssByColor(ssSku, subStoreSummary)
+            return (
+                <Space direction='vertical' style={{display:'flex'}}>
+
+                    
+                    <Space style={{display: 'flex', flexFlow:'row-reverse'}}>
+
+                        <Select style={{minWidth:'100px'}} placeholder='选择 款式' defaultActiveFirstOption onChange={setssSku} options={sku}/>
+                    </Space>
+
+
+
+                    <Tabs defaultActiveKey="1" items={sssTabItems({colorItems, sizeItems, areaIteams,sku:ssSku,subStoreSummary})} />
+                    {/* <Table 
+
+                        pagination={{pageSize: 10, position:['bottomCenter']}}
+                    
+                        columns={[
+                            {
+                                title: '款式',
+                                dataIndex: 'sku',
+                                key:'sku'
+                            },
+                            {
+                                title: '尺码',
+                                dataIndex: 'size',
+                                key:'size'
+                            },
+                            {
+                                title: '颜色',
+                                dataIndex: 'color',
+                                key:'color'
+                            },
+                            {
+                                title: '库架',
+                                dataIndex: 'area',
+                                key:'area'
+                            },
+                            {
+                                title: '数量',
+                                dataIndex: 'count',
+                                key:'count'
+                            },
+                        ]}
+                        dataSource={subStoreSummary.filter(v=>v.sku === ssSku)}
+                    />
+                    <Card
+                        title="按尺码"
+                        
+                    >
+                        <List 
+                            dataSource={sizeItems}
+                            renderItem={
+                                (item, index) => 
+                                <List.Item>
+                                    
+                                    {item.size} {item.count}
+                    
+                                </List.Item>
+                            }
+                        />
+                    </Card>
+
+                    <Card
+                        title="按颜色">
+                        <List 
+                            dataSource={colorItems}
+                            renderItem={
+                                (item, index) => 
+                                <List.Item>{item.color} {item.count}
+                                </List.Item>
+                            }
+                        />
+                    </Card>
+
+                    <Card
+                        title="按库架">
+                        <List 
+                            dataSource={areaIteams}
+                            renderItem={
+                                (item, index) => 
+                                <List.Item>{item.area} {item.count}
+                                </List.Item>
+                            }
+                        />
+                    </Card> */}
+                </Space>
+            )
         }
 
 
@@ -300,9 +553,9 @@ export default observer(
                             <Button disabled={!(selectedRowKeys.length > 0) } icon={<UploadOutlined />}>返厂</Button>
                         </Popconfirm>
 
-                        <Button onClick={()=>setdrawerSwitchFactory(true)} icon={<UnorderedListOutlined style={{color: '#006564'}} />}>清单</Button>
+                        <Button onClick={()=>setdrawerSwitchFactory(true)} icon={<UnorderedListOutlined style={{color: '#006564'}} />}>返厂记录</Button>
 
-                        <Button icon={<BarChartOutlined />}>图表</Button>
+                        <Button onClick={()=>{setssSkuDrawer(true);getAllYunSummary().catch(console.log)}} icon={<BarChartOutlined />}>图表</Button>
                     </Space>
                    
 
@@ -479,7 +732,6 @@ export default observer(
 
         }
 
-
        
         return(
 
@@ -542,11 +794,11 @@ export default observer(
                 <Drawer
                     title="筛选"
                     // size='large'
-                    extra={
-                    <>
-                        <Button onClick={()=>{filteForm.resetFields(); setFilterProduct({})}}>重置</Button>
-                    </>
-                    }
+                    // extra={
+                    // <>
+                    //     <Button >重置</Button>
+                    // </>
+                    // }
                     placement='left'
                     onClose={()=>setdrawerSwitch(!drawerSwitch)}
                     open={drawerSwitch}
@@ -559,7 +811,7 @@ export default observer(
                     wrapperCol={{span:24}}
                     size='middle'
                     preserve={false}
-                    onFinish={(values)=>{setFilterProduct(values);setdrawerSwitch(!drawerSwitch)}}
+                    onFinish={(values)=>{console.log(values);setFilterProduct(values);setdrawerSwitch(!drawerSwitch)}}
                     form={filteForm}            
                 >
 
@@ -624,7 +876,12 @@ export default observer(
         
         
                     <Form.Item>
-                        <Button block type='primary' htmlType='submit'>查找</Button>
+                        <Form.Item>
+                            <Button block type='primary' htmlType='submit'>查找</Button>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button onClick={()=>{filteForm.resetFields(); setFilterProduct({})}} block >重置</Button>
+                        </Form.Item>
                     </Form.Item>
 
                 </Form>
@@ -642,8 +899,15 @@ export default observer(
                 >
                     <Collapse collapsible="icon" items={getCollapseItems()} />
                 </Drawer>
-
-
+                <Drawer
+                    title="库存概要 图表"
+                    placement='bottom'
+                    height={600}
+                    onClose={()=>setssSkuDrawer(!ssSkuDrawer)}
+                    open={ssSkuDrawer}
+                >
+                    {getSSSContent()}
+                </Drawer>
             </div>
         )
     }
