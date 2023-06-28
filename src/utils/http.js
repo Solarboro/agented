@@ -9,7 +9,7 @@ nProgress.configure({showSpinner: false});
 
 const http = axios.create({
     baseURL: process.env.REACT_APP_BE_API,
-    timeout: 3000
+    // timeout: 3000
 });
 
 

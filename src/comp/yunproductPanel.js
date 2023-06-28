@@ -43,7 +43,7 @@ export default function useProductPanel({title}){
                 </Col>
 
                 <Col  span={16}>
-                  <Form.Item name={['yunBOrder',"orderNo"]}><AutoComplete placeholder='电商订单' /></Form.Item>
+                  <Form.Item  name={['yunBOrder',"orderNo"]}><AutoComplete disabled placeholder='电商订单' /></Form.Item>
                 </Col>
                 <Col  span={8}>
                   <Form.Item style={{display: 'inline-block', width:'100%'}}  name={['yunBOrder',"name"]} ><AutoComplete placeholder='客户名' /></Form.Item>
