@@ -427,7 +427,7 @@ export default observer(
                         key: v.key,
                         label: getCollapseItemsLabel(v),
                         children: <>
-                        <Typography.Text type="secondary"  editable={{onChange: comment=> updateFOrder({...v, comment})}} > 备注: {v.comment ? v.comment : '-' }</Typography.Text>
+                        备注: <Typography.Text type="secondary"  editable={{onChange: comment=> updateFOrder({...v, comment})}} >{v.comment}</Typography.Text>
                             <List 
                                 size='small'
                                 dataSource={v.yunProducts}
@@ -622,7 +622,7 @@ export default observer(
                     closeIcon
                     title="返厂记录"
                     placement='bottom'
-                    size='large'
+                    
                     extra={<Button icon={<ReloadOutlined />}  onClick={()=>retrieveAllFOrder()}>获取最新记录</Button>}
                     onClose={()=>setdrawerSwitchFactory(!drawerSwitchFactory)}
                     open={drawerSwitchFactory}
