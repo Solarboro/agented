@@ -1,4 +1,4 @@
-import { PlusCircleOutlined, UploadOutlined, FilterOutlined, DownloadOutlined,UnorderedListOutlined, ReloadOutlined, RollbackOutlined} from '@ant-design/icons';
+import { PlusCircleOutlined, UploadOutlined, FilterOutlined, InfoCircleOutlined, BarChartOutlined, DownloadOutlined,UnorderedListOutlined, ReloadOutlined, RollbackOutlined} from '@ant-design/icons';
 import { App,  AutoComplete,  Button,  Card,  Col,  Collapse,  DatePicker,  Descriptions, Drawer, FloatButton, Form, Image, Input, InputNumber, List, Popconfirm, Row, Segmented,  Select,  Space, Statistic, Steps,  Switch,  Table, Tag, Typography, Upload, Watermark } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
@@ -222,6 +222,8 @@ export default observer(
             <>
             {getSteps(1, record)}
     
+
+            {!(selectedRowKeys.length > 0) && 
             <Space.Compact>
     
                 <Button type='text'>库架: {record.toSubStoreArea ? record.toSubStoreArea : '-'}</Button>
@@ -235,6 +237,7 @@ export default observer(
                     <Button type='link'>撤出</Button>
                 </Popconfirm>
             </Space.Compact>
+        }
             </>
 
             const svFactory = 
@@ -272,13 +275,15 @@ export default observer(
                             <Button icon={<DownloadOutlined />}>批量导入</Button>
                         </Upload>
 
-                        <Button onClick={ ()=>
+                        <Button
+                            icon={<InfoCircleOutlined />}
+                            onClick={ ()=>
                             modal.info({
                                 icon: true,
                                 content: <Image src={bg}  />
                             })
 
-                        }>概要</Button>
+                        }>指南</Button>
                         {/* <Button onClick={productNew} icon={<PlusCircleOutlined style={{color: '#006564'}} />}>单</Button> */}
                     </Space>
            
@@ -296,6 +301,8 @@ export default observer(
                         </Popconfirm>
 
                         <Button onClick={()=>setdrawerSwitchFactory(true)} icon={<UnorderedListOutlined style={{color: '#006564'}} />}>清单</Button>
+
+                        <Button icon={<BarChartOutlined />}>图表</Button>
                     </Space>
                    
 
